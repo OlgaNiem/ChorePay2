@@ -18,5 +18,6 @@ Route::get('choose-role', function () {
 })->name('chooseRole');
 
 
+
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';

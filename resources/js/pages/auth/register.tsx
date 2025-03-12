@@ -1,4 +1,4 @@
-import { Head, useForm } from '@inertiajs/react';
+import { Head, useForm, usePage } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { FormEventHandler } from 'react';
 
@@ -14,14 +14,18 @@ type RegisterForm = {
     email: string;
     password: string;
     password_confirmation: string;
+    role: string;
 };
 
 export default function Register() {
+    const { role } = usePage().props as { role?: string }; // Получаем переданный параметр `role`
+    
     const { data, setData, post, processing, errors, reset } = useForm<Required<RegisterForm>>({
         name: '',
         email: '',
         password: '',
         password_confirmation: '',
+        role: role || 'parent', // По умолчанию роль "parent"
     });
 
     const submit: FormEventHandler = (e) => {
@@ -34,8 +38,17 @@ export default function Register() {
     return (
         <AuthLayout title="Create an account" description="Enter your details below to create your account">
             <Head title="Register" />
+            
+            <div className="text-center mb-4">
+                <p className="text-lg font-semibold">
+                    Registering as: <span className="text-blue-500">{data.role === 'parent' ? 'Parent' : 'User'}</span>
+                </p>
+            </div>
+
             <form className="flex flex-col gap-6" onSubmit={submit}>
                 <div className="grid gap-6">
+                    <Input type="hidden" value={data.role} name="role" />
+
                     <div className="grid gap-2">
                         <Label htmlFor="name">Name</Label>
                         <Input
