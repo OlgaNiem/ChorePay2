@@ -18,7 +18,7 @@ const ChooseRole = () => {
 
         <div className="mt-6 flex flex-col gap-6 items-center">
           <Link
-            href={route('register')}
+            href={route('login')}
             className="cursor-pointer w-[329px] h-[120px] px-2 border-2 border-[#ffd700] bg-[#809eff] text-black font-semibold text-lg rounded-lg shadow-md hover:opacity-90 flex flex-col items-center justify-center text-center"
           >
             <span>I am a parent</span>
@@ -26,7 +26,7 @@ const ChooseRole = () => {
           </Link>
 
           <Link
-            href={route('register')}
+            href={route('login')}
             className="cursor-pointer w-[329px] h-[120px] px-2 border-2 border-[#66aedd] bg-[#F9CC18] text-black font-semibold text-lg rounded-lg shadow-md hover:opacity-90 flex flex-col items-center justify-center text-center"
           >
             <span>I am a child</span>
