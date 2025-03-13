@@ -18,6 +18,15 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->enum('role', ['parent', 'child'])->default('parent')->index();
+            
+            /*$table->bigInteger("parent_id")->nullable();
+            $table->foreign("parent_id")->references("id")->on("users");
+
+            $table->bigInteger("family_id")->nullable();
+            $table->foreign("family_id")->references("id")->on("families");*/
+
+            $table->foreignId('parent_id')->nullable()->constrained('users')->onDelete('cascade');
+            $table->foreignId('family_id')->nullable()->constrained('families')->onDelete('set null');
             $table->rememberToken();
             $table->timestamps();
         });
@@ -43,7 +52,12 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('family_id');
+        });
+
         Schema::dropIfExists('users');
+        
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
     }

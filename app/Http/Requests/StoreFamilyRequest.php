@@ -29,12 +29,6 @@ class StoreFamilyRequest extends FormRequest
             'created_by' => 'required|exists:users,id',
         ];
     }
-
-    /**
-     * Получите сообщение об ошибке, которое будет возвращено в случае ошибок.
-     *
-     * @return array
-     */
     public function messages()
     {
         return [

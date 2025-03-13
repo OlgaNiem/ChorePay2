@@ -11,28 +11,16 @@ class Family extends Model
 
     protected $fillable = ['name', 'created_by'];
 
-    /**
-     * Связь с пользователем, который создал семью.
-     */
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    /**
-     * Связь с пользователями, которые принадлежат этой семье.
-     */
     public function users()
     {
-        return $this->hasMany(FamilyUser::class);
+        return $this->hasOne(User::class, 'family_id');
     }
 
-    /**
-     * Создание новой семьи (без валидации, валидация теперь в FormRequest).
-     *
-     * @param  array  $data
-     * @return \App\Models\Family
-     */
     public static function createFamily(array $data)
     {
         try {
