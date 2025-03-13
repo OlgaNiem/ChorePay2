@@ -18,7 +18,7 @@ class Family extends Model
 
     public function users()
     {
-        return $this->hasOne(User::class, 'family_id');
+        return $this->hasMany(User::class, 'family_id');
     }
 
     public static function createFamily(array $data)

@@ -35,6 +35,7 @@ class FamilyController extends Controller
     {
         try {
             $validatedData = $request->validated();
+            $validatedData['created_by'] = Auth::id();
 
             $family = $this->familyService->createFamily($validatedData);
 
