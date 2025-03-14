@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\FamilyController;
+use App\Http\Controllers\ChildController;
 
 Route::get('/', function () {
     return Inertia::render('welcome');
@@ -23,9 +24,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('family-options');
 
     Route::get('create-family', [FamilyController::class, 'create'])->name('create-family');
-
     Route::post('create-family', [FamilyController::class, 'store'])->name('store-family');
 
+    Route::get('/add-child', [ChildController::class, 'create'])->name('add-child');
+    Route::post('/store-child-profile', [ChildController::class, 'store'])->name('store-child-profile');
+
+    Route::get('child-profile', function () {
+        return Inertia::render('child-profile');
+    })->name('child-profile');
+
+  
     Route::get('join-family', function () {
         return Inertia::render('join-family');
     })->name('join-family');

@@ -24,7 +24,7 @@ class FamilyController extends Controller
         $user = Auth::user();
 
         if ($user && $user->family) {
-            return redirect()->route('family-options')
+            return redirect()->route('dashboard')
                 ->with('message', 'You are already part of a family.');
         }
 
@@ -37,12 +37,11 @@ class FamilyController extends Controller
             $validatedData = $request->validated();
             $validatedData['created_by'] = Auth::id();
     
-            // Здесь можно использовать `Log::debug()` для отладки, если нужно вывести содержимое
             Log::debug('Validated Data:', $validatedData);
     
             $family = $this->familyService->createFamily($validatedData);
 
-            return redirect()->route('join-family')->with('message', 'Family created successfully. You can now join your family.');
+            return redirect()->route('add-child')->with('message', 'Family created successfully. You can now join your family.');
 
         } catch (\Exception $e) {
             Log::error('Error creating family: ' . $e->getMessage());

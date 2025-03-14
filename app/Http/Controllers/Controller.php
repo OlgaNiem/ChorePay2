@@ -16,7 +16,6 @@ abstract class Controller
      */
     protected function hasRole(Request $request, string $role): bool
     {
-        // Example: You can check user roles or any logic you want
         return $request->user()->role === $role;
     }
 

@@ -10,6 +10,7 @@ interface Errors {
 const CreateFamily = () => {
   const { errors } = usePage().props;
   const [familyName, setFamilyName] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleError = (errors: Errors) => {
     if (errors.name) {
@@ -19,19 +20,22 @@ const CreateFamily = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSuccess = () => {
+      
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!familyName.trim()) {
       console.error("Family name is empty!");
       return;
     }
-
-    router.post(route('store-family'), { name: familyName }, {
-      onSuccess: () => {
-        router.visit(route('join-family'));
-      },
-      onError: handleError
+    setIsLoading(true);
+      router.post(route('store-family'), { name: familyName }, {
+      onSuccess: handleSuccess,
+      onError: handleError,
+      onFinish: () => setIsLoading(false) 
     });
   };
 
@@ -68,9 +72,13 @@ const CreateFamily = () => {
             className="w-full mt-2 p-3 border border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-yellow-400 placeholder-[#6B7280] text-[#6B7280]"
           />
         </div>
-        
-        <Button type="submit" className="w-full py-3 text-lg bg-yellow-500 text-black font-semibold rounded-lg">
-          Create Family
+
+        <Button 
+          type="submit" 
+          className="w-full py-3 text-lg bg-yellow-500 text-black font-semibold rounded-lg"
+          disabled={isLoading} 
+        >
+          {isLoading ? 'Creating...' : 'Create Family'}
         </Button>
       </form>
     </div>
