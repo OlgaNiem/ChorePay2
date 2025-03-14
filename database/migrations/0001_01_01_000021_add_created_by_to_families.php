@@ -11,20 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('families', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            //$table->foreignId('created_by')->constrained('users')->onDelete('cascade');
-            $table->timestamps();
+        Schema::table('families', function (Blueprint $table) {
+            $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
         });
     }
-
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('families');
+        Schema::table('families', function (Blueprint $table) {
+            //
+        });
     }
 };

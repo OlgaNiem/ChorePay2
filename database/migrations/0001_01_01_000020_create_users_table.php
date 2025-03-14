@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('password');
             $table->enum('role', ['parent', 'child'])->default('parent')->index();
             $table->foreignId('parent_id')->nullable()->constrained('users')->onDelete('cascade');
-            $table->foreignId('family_id')->nullable()->constrained('families')->onDelete('set null');
+            $table->foreignId('family_id')->nullable()->constrained('families')->onDelete('set null'); // Убедись, что families создаётся первой
             $table->rememberToken();
             $table->timestamps();
         });

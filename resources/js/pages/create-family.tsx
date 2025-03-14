@@ -3,26 +3,36 @@ import { usePage, router } from '@inertiajs/react';
 import { Button } from '@/components/ui/button'; 
 import { Head } from '@inertiajs/react';
 
+interface Errors {
+  name?: string;
+}
+
 const CreateFamily = () => {
   const { errors } = usePage().props;
-  const [familyName, setFamilyName] = useState('');
+  const [familyName, setFamilyName] = useState<string>('');
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleError = (errors: Errors) => {
+    if (errors.name) {
+      console.error("Error creating family:", errors.name);
+    } else {
+      console.error("Error creating family: Unknown error");
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!familyName) {
-
+    if (!familyName.trim()) {
+      console.error("Family name is empty!");
       return;
     }
 
-    try {
-
-      await router.post(route('store-family'), { name: familyName });
-
-      router.visit(route('join-family'));
-    } catch (err) {
-      console.error('Error creating family:', err);
-    }
+    router.post(route('store-family'), { name: familyName }, {
+      onSuccess: () => {
+        router.visit(route('join-family'));
+      },
+      onError: handleError
+    });
   };
 
   return (

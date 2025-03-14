@@ -12,7 +12,11 @@ class FamilyService
         $data['created_by'] = Auth::id();
 
         try {
+            \Log::info('Family creation data: ', $data);
             $family = Family::create($data);
+            $user = Auth::user();
+            $user->family_id = $family->id;
+            $user->save();
             return $family;
         } catch (\Exception $e) {
             \Log::error('Error creating family: ' . $e->getMessage());

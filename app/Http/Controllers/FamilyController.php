@@ -36,7 +36,10 @@ class FamilyController extends Controller
         try {
             $validatedData = $request->validated();
             $validatedData['created_by'] = Auth::id();
-
+    
+            // Здесь можно использовать `Log::debug()` для отладки, если нужно вывести содержимое
+            Log::debug('Validated Data:', $validatedData);
+    
             $family = $this->familyService->createFamily($validatedData);
 
             return redirect()->route('join-family')->with('message', 'Family created successfully. You can now join your family.');
