@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\ChildController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -24,7 +25,7 @@ Route::middleware('guest')->group(function () {
     Route::get('login-child', [AuthenticatedSessionController::class, 'createChild'])
     ->name('login-child');
 
-    Route::post('login-child', [AuthenticatedSessionController::class, 'store']);
+    Route::post('login-child', [ChildController::class, 'login']);
 
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
         ->name('password.request');

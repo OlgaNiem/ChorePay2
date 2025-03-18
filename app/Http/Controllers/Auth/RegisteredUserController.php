@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
+use function event;
+use function redirect;
 
 class RegisteredUserController extends Controller
 {
@@ -32,16 +34,22 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'role' => 'required|string|in:parent,child',
+            'email' => $request->role === 'parent' ? 'required|string|email|max:255|unique:users' : 'nullable',
         ]);
 
-        $user = User::create([
+        $userData = [
             'name' => $request->name,
-            'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => 'parent',
-        ]);
+            'role' => $request->role,
+        ];
+
+        if ($request->role === 'parent') {
+            $userData['email'] = $request->email;
+        }
+
+        $user = User::create($userData);
 
         event(new Registered($user));
 

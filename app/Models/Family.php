@@ -20,6 +20,11 @@ class Family extends Model
     {
         return $this->hasMany(User::class, 'family_id');
     }
+    
+    public function children()
+    {
+        return $this->hasMany(Child::class, 'family_id');
+    }
 
     public static function createFamily(array $data)
     {

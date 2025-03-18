@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Family;
 use App\Http\Requests\StoreFamilyRequest;
 use App\Services\FamilyService;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
-
+use function redirect;
 class FamilyController extends Controller
 {
     protected $familyService;

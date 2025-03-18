@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import { Head } from '@inertiajs/react';
-import { Button } from '@/components/ui/button'; 
-import { usePage, router } from '@inertiajs/react';
+import { Head, usePage, router } from '@inertiajs/react';
+import { Button } from '@/components/ui/button';
 
 const AddChild = () => {
   const { errors } = usePage().props;
   const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState(''); 
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -21,9 +19,8 @@ const AddChild = () => {
 
     setIsLoading(true);
 
-      router.post(route('store-child-profile'), { 
-      name: fullName, 
-      email,  
+    router.post(route('store-child-profile'), { 
+      name: fullName,  
       password, 
       password_confirmation: confirmPassword  
     }, {
@@ -61,10 +58,6 @@ const AddChild = () => {
           <div className="text-red-500 text-sm text-center">{errors.name}</div>
         )}
 
-        {errors.email && (
-          <div className="text-red-500 text-sm text-center">{errors.email}</div>
-        )}
-
         {errors.password && (
           <div className="text-red-500 text-sm text-center">{errors.password}</div>
         )}
@@ -84,21 +77,6 @@ const AddChild = () => {
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
             placeholder="Enter full name"
-            className="w-full mt-2 p-3 border border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-yellow-400 placeholder-[#6B7280] text-[#6B7280]"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="email" className="block text-lg text-gray-700 font-medium">
-            Email
-          </label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter email"
             className="w-full mt-2 p-3 border border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-yellow-400 placeholder-[#6B7280] text-[#6B7280]"
           />
         </div>

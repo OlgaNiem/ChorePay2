@@ -5,6 +5,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\ChildController;
 
+
 Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
@@ -28,6 +29,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/add-child', [ChildController::class, 'create'])->name('add-child');
     Route::post('/store-child-profile', [ChildController::class, 'store'])->name('store-child-profile');
+
+    //Route::post('/login-child', [ChildController::class, 'login'])->name('login-child');
+    //Route::get('/child-profile', [ChildController::class, 'profile'])->name('child-profile');
+    //Route::post('/logout-child', [ChildController::class, 'logout'])->name('logout-child');
 
     Route::get('child-profile', function () {
         return Inertia::render('child-profile');
