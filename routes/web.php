@@ -5,6 +5,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\ChildController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\TaskController;
 
 Route::get('/', function () {
     return Inertia::render('welcome');
@@ -41,6 +42,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/store-child-profile', [ChildController::class, 'store'])->name('store-child-profile');
 
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+
+    Route::get('/new-task', [TaskController::class, 'create'])->name('new-task');
+    Route::post('/tasks', [TaskController::class, 'store'])->name('store-task');
 });
 
 // Child routes
