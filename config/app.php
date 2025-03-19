@@ -65,7 +65,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => env('APP_TIMEZONE', 'UTC'),
 
     /*
     |--------------------------------------------------------------------------
@@ -95,15 +95,27 @@ return [
     |
     */
 
-    'cipher' => 'AES-256-CBC',
+    'cipher' => env('APP_CIPHER', 'AES-256-CBC'),
 
     'key' => env('APP_KEY'),
 
-    'previous_keys' => [
-        ...array_filter(
-            explode(',', env('APP_PREVIOUS_KEYS', ''))
-        ),
-    ],
+    'previous_keys' => array_filter(explode(',', env('APP_PREVIOUS_KEYS', ''))),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Ensure Encryption Key is Set
+    |--------------------------------------------------------------------------
+    |
+    | Throw an exception if the application key is not set, preventing
+    | errors related to missing encryption keys.
+    |
+    */
+
+    'ensure_key' => function () {
+        if (empty(env('APP_KEY'))) {
+            throw new RuntimeException('APP_KEY is not set in the .env file!');
+        }
+    },
 
     /*
     |--------------------------------------------------------------------------

@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
 
-
 class AuthenticatedSessionController extends Controller
 {
     /**
@@ -37,15 +36,39 @@ class AuthenticatedSessionController extends Controller
     }
 
     /**
-     * Handle an incoming authentication request.
+     * Handle parent login.
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+        // Logout child session if active
+        if (Auth::guard('children')->check()) {
+            Auth::guard('children')->logout();
+            session()->invalidate();
+            session()->regenerateToken();
+        }
+
         $request->authenticate();
+        session()->regenerate();
 
-        $request->session()->regenerate();
+        return redirect()->route('dashboard');
+    }
 
-        return redirect()->intended(route('dashboard', absolute: false));
+    /**
+     * Handle child login.
+     */
+    public function storeChild(Request $request): RedirectResponse
+    {
+        $validatedData = $request->validate([
+            'name' => 'required|string',
+            'password' => 'required|string',
+        ]);
+
+        if (Auth::guard('children')->attempt($validatedData)) {
+            session()->regenerate();
+            return redirect()->route('child-profile');
+        }
+
+        return back()->withErrors(['name' => 'Invalid credentials']);
     }
 
     /**
@@ -54,6 +77,7 @@ class AuthenticatedSessionController extends Controller
     public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();
+        Auth::guard('children')->logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();

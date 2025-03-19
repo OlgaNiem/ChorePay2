@@ -12,6 +12,7 @@ use App\Http\Controllers\ChildController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
+
     Route::get('register', [RegisteredUserController::class, 'create'])
         ->name('register');
 
@@ -21,9 +22,9 @@ Route::middleware('guest')->group(function () {
         ->name('login');
 
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
-    
+
     Route::get('login-child', [AuthenticatedSessionController::class, 'createChild'])
-    ->name('login-child');
+        ->name('login-child');
 
     Route::post('login-child', [ChildController::class, 'login']);
 
@@ -59,4 +60,8 @@ Route::middleware('auth')->group(function () {
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
+});
+
+Route::middleware(['auth.children'])->group(function () {
+    Route::post('logout-child', [ChildController::class, 'logout'])->name('logout-child');
 });

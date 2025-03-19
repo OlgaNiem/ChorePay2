@@ -17,7 +17,7 @@ interface PageProps extends Record<string, unknown> {
             email: string;
         } | null;
     };
-    family?: Family | null; // Добавляем тип для family
+    family?: Family | null;
 }
 
 const FamilyOptions = () => {
