@@ -1,6 +1,5 @@
 import AppLayout from '@/layouts/app-layout';
 import { Head, usePage } from '@inertiajs/react';
-import DashboardHeader from '@/components/dashboard/DashboardHeader';
 import ChildrenList from '@/components/dashboard/ChildrenList';
 import TaskList from '@/components/dashboard/TaskList';
 import CompletedTasks from '@/components/dashboard/CompletedTasks';
@@ -31,11 +30,10 @@ export default function Dashboard() {
   return (
     <AppLayout>
       <Head title="Dashboard" />
-      <DashboardHeader user={auth.user} />
-      <div className="container mx-auto px-4 py-6 space-y-6">
-        <ChildrenList children={children} />
-        <TaskList tasks={tasks} />
-        <CompletedTasks tasks={tasks} />
+        <div className="container mx-auto px-4 py-6 space-y-6">
+          <ChildrenList children={children} />
+          <TaskList tasks={tasks} />
+          <CompletedTasks tasks={tasks} />
       </div>
     </AppLayout>
   );

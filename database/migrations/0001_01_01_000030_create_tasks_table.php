@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('tasks', function (Blueprint $table) {
@@ -18,18 +15,24 @@ return new class extends Migration
             $table->enum('priority', ['low', 'medium', 'high'])->default('high');
             $table->decimal('reward', 10, 2);
             $table->enum('status', ['pending', 'completed'])->default('pending'); 
-            $table->foreignId('assigned_to')->constrained('users')->onDelete('cascade');
-            $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
+
+            $table->uuid('assigned_to')->nullable();
+            $table->uuid('created_by');
+
+            $table->foreign('assigned_to')->references('uuid')->on('users')->onDelete('set null');
+            $table->foreign('created_by')->references('uuid')->on('users')->onDelete('cascade');
+
             $table->timestamps();
         });
     }
 
-
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
+        Schema::table('tasks', function (Blueprint $table) {
+            $table->dropForeign(['assigned_to']);
+            $table->dropForeign(['created_by']);
+        });
+
         Schema::dropIfExists('tasks');
     }
 };

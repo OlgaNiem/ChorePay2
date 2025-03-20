@@ -25,6 +25,7 @@ interface PageProps {
 
 const NewTask = () => {
   const { children = [], errors = {} } = usePage<PageProps>().props;
+  console.log("Children:", children);
 
   return (
     <Card className="min-h-screen w-full bg-gray-50 flex flex-col items-center justify-center p-6 rounded-none">

@@ -12,16 +12,22 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
+            $table->uuid('uuid')->unique();
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->enum('role', ['parent', 'child'])->default('parent')->index();
-            $table->foreignId('parent_id')->nullable()->constrained('users')->onDelete('cascade');
-            $table->foreignId('family_id')->nullable()->constrained('families')->onDelete('set null'); // Убедись, что families создаётся первой
+            $table->uuid('parent_id')->nullable();
+            $table->uuid('family_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
+        });
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->foreign('parent_id')->references('uuid')->on('users')->onDelete('cascade');
+            $table->foreign('family_id')->references('uuid')->on('families')->onDelete('set null');
         });
 
         /*Schema::create('password_reset_tokens', function (Blueprint $table) {
@@ -50,7 +56,7 @@ return new class extends Migration
         });
 
         Schema::dropIfExists('users');
-        
+
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
     }

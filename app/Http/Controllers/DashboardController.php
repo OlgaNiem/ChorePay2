@@ -15,6 +15,7 @@ class DashboardController extends Controller
         $user = Auth::user();
 
         return Inertia::render('dashboard', [
+            'auth' => ['user' => $user],
             'children' => User::where('parent_id', $user->id)->where('role', 'child')->get(),
             'tasks' => Task::where('created_by', $user->id)->get(),
         ]);
