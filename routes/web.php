@@ -15,7 +15,7 @@ Route::get('choose-role', function () {
     return Inertia::render('ChooseRole');
 })->name('chooseRole');
 
-// Parent routes
+// parents
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');
@@ -45,15 +45,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/new-task', [TaskController::class, 'create'])->name('new-task');
     Route::post('/tasks', [TaskController::class, 'store'])->name('store-task');
+
+    Route::get('/child-profile/{child}', [ChildController::class, 'profile'])->name('child-profile');
 });
 
-// Child routes
-Route::middleware(['auth.children'])->group(function () {
-    Route::get('/child-profile/{child?}', [ChildController::class, 'profile'])->name('child-profile');
+// children
+Route::middleware(['auth:children'])->group(function () {
+    Route::get('/child-profile', [ChildController::class, 'profile'])->name('child-profile.child');
     Route::post('/logout-child', [ChildController::class, 'logout'])->name('logout-child');
 });
 
-// Authentication
+// guests
 Route::middleware('guest')->group(function () {
     Route::get('register', [AuthenticatedSessionController::class, 'create'])->name('register');
     Route::post('register', [AuthenticatedSessionController::class, 'store']);
@@ -65,6 +67,5 @@ Route::middleware('guest')->group(function () {
     Route::post('login-child', [ChildController::class, 'login']);
 });
 
-// Include additional route files
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';

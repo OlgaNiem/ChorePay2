@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class User extends Authenticatable
 {
@@ -17,7 +18,7 @@ class User extends Authenticatable
         'password',
         'role',
         'parent_id',
-        'family_id', 
+        'family_id',
     ];
 
     protected $hidden = [
@@ -40,23 +41,33 @@ class User extends Authenticatable
         return $this->hasMany(Task::class, 'created_by');
     }
 
-    public function family()
+    public function family(): BelongsTo
     {
         return $this->belongsTo(Family::class, 'family_id');
     }
 
-    public function transactions()
+    public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class);
     }
 
-    public function parent()
+    public function parent(): BelongsTo
     {
         return $this->belongsTo(User::class, 'parent_id');
     }
 
-    public function children()
+    public function children(): HasMany
     {
-        return $this->hasMany(Child::class, 'parent_id');
+        return $this->hasMany(User::class, 'parent_id');
+    }
+
+    public function isParent(): bool
+    {
+        return $this->role === 'parent';
+    }
+
+    public function isChild(): bool
+    {
+        return $this->role === 'child';
     }
 }

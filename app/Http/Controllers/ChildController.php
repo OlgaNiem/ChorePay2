@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Child;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 use function redirect;
 use function back;
 
@@ -26,14 +25,15 @@ class ChildController extends Controller
         try {
             $parent = Auth::user();
 
-            $child = Child::create([
+            $child = User::create([
                 'name' => $validatedData['name'],
                 'password' => Hash::make($validatedData['password']),
                 'parent_id' => $parent->id,
                 'family_id' => $parent->family_id,
+                'role' => 'child',
             ]);
 
-            return redirect()->route('child-profile')->with('message', 'Child profile created successfully!');
+            return redirect()->route('child-profile', $child->id)->with('message', 'Child profile created successfully!');
         } catch (\Exception $e) {
             Log::error('Error creating child profile: ' . $e->getMessage());
             return back()->withErrors(['error' => 'Something went wrong! Please try again later.']);
@@ -47,7 +47,7 @@ class ChildController extends Controller
             'password' => 'required|string',
         ]);
 
-        $child = Child::where('name', $validatedData['name'])->first();
+        $child = User::where('name', $validatedData['name'])->where('role', 'child')->first();
 
         if (!$child || !Hash::check($validatedData['password'], $child->password)) {
             Log::warning('Child login failed', ['name' => $validatedData['name']]);
@@ -63,28 +63,27 @@ class ChildController extends Controller
 
         Log::info('Child logged in successfully', ['child_id' => $child->id]);
 
-        return redirect()->route('child-profile');
+        return redirect()->route('child-profile.child');
     }
 
     public function profile(Request $request, $childId = null)
     {
         if (Auth::guard('children')->check()) {
             $child = Auth::guard('children')->user();
-        } else {
+        } elseif (Auth::check()) {
             $parent = Auth::user();
-            if (!$parent) {
-                return redirect()->route('login')->withErrors(['error' => 'Unauthorized']);
-            }
 
-            $child = Child::where('parent_id', $parent->id)
-                ->when($childId, function ($query, $childId) {
-                    return $query->where('id', $childId);
-                })
-                ->first();
+            $child = User::where('role', 'child')
+                        ->where('parent_id', $parent->id)
+                        ->when($childId, function ($query, $childId) {
+                            return $query->where('id', $childId);
+                        })->first();
 
             if (!$child) {
-                return redirect()->route('dashboard')->withErrors(['error' => 'Child not found']);
+                return redirect()->route('dashboard')->withErrors(['error' => 'Child not found or unauthorized']);
             }
+        } else {
+            return redirect()->route('login')->withErrors(['error' => 'Unauthorized']);
         }
 
         return Inertia::render('child-profile', ['child' => $child]);
@@ -104,7 +103,7 @@ class ChildController extends Controller
     protected function validateChild(Request $request)
     {
         return $request->validate([
-            'name' => 'required|string|max:255|unique:children,name',
+            'name' => 'required|string|max:255|unique:users,name',
             'password' => 'required|string|min:8|confirmed',
         ]);
     }
