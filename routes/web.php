@@ -6,6 +6,7 @@ use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\ChildController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
     return Inertia::render('welcome');
@@ -17,9 +18,7 @@ Route::get('choose-role', function () {
 
 // parents
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
-    })->name('dashboard');
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('family-options', function () {
         return Inertia::render('family-options');
