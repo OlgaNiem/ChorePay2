@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('families', function (Blueprint $table) {
-            $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
+            $table->uuid('created_by')->nullable();
+            $table->foreign('created_by')->references('uuid')->on('users')->onDelete('cascade');
         });
     }
 
@@ -22,7 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('families', function (Blueprint $table) {
-            //
+            $table->dropForeign(['created_by']);
+            $table->dropColumn('created_by');
         });
     }
 };

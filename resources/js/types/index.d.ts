@@ -40,3 +40,24 @@ export interface User {
     updated_at: string;
     [key: string]: unknown;
 }
+
+export interface Child {
+    id: string;
+    uuid: string;
+    name: string;
+    avatar: string | null;
+}
+
+export interface Task {
+    id: string;
+    title: string;
+    reward: string;
+    status: 'pending' | 'completed';
+    assigned_to: string;
+}
+
+export interface PageProps extends Record<string, unknown> {
+    auth: { user: User | null };
+    children?: Child[];
+    tasks?: Task[];
+}

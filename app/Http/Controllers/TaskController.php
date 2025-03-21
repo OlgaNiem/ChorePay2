@@ -12,21 +12,17 @@ use Illuminate\Support\Facades\Log;
 
 class TaskController extends Controller
 {
-    /**
-     * Show the create task page with the parent's children.
-     */
     public function create(): Response
     {
         $user = Auth::user();
 
         return Inertia::render('new-task', [
-            'children' => User::where('parent_id', $user->id)->where('role', 'child')->get(),
+            'children' => User::where('parent_id', $user->id)
+                ->where('role', 'child')
+                ->get(['uuid', 'name']),
         ]);
     }
 
-    /**
-     * Store a new task in the database.
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -34,7 +30,7 @@ class TaskController extends Controller
             'description' => 'nullable|string',
             'priority' => 'required|in:low,medium,high',
             'reward' => 'required|numeric|min:0',
-            'assigned_to' => 'required|exists:users,id',
+            'assigned_to' => 'required|exists:users,uuid',
         ]);
 
         try {
@@ -45,7 +41,7 @@ class TaskController extends Controller
                 'reward' => $validated['reward'],
                 'status' => 'pending',
                 'assigned_to' => $validated['assigned_to'],
-                'created_by' => Auth::id(),
+                'created_by' => Auth::user()?->uuid,
             ]);
 
             return redirect()->route('dashboard')->with('message', 'Task created successfully!');

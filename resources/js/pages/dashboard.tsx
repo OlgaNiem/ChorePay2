@@ -3,26 +3,7 @@ import { Head, usePage } from '@inertiajs/react';
 import ChildrenList from '@/components/dashboard/ChildrenList';
 import TaskList from '@/components/dashboard/TaskList';
 import CompletedTasks from '@/components/dashboard/CompletedTasks';
-
-interface Child {
-  id: number;
-  name: string;
-  avatar: string | null;
-}
-
-interface Task {
-  id: number;
-  title: string;
-  reward: string;
-  status: 'pending' | 'completed';
-  assigned_to: number;
-}
-
-interface PageProps extends Record<string, unknown> {
-  auth: { user: { id: number; name: string; email: string; avatar?: string } | null };
-  children?: Child[];
-  tasks?: Task[];
-}
+import type { PageProps } from '@/types';
 
 export default function Dashboard() {
   const { auth, children = [], tasks = [] } = usePage<PageProps>().props;
@@ -30,10 +11,10 @@ export default function Dashboard() {
   return (
     <AppLayout>
       <Head title="Dashboard" />
-        <div className="container mx-auto px-4 py-6 space-y-6">
-          <ChildrenList children={children} />
-          <TaskList tasks={tasks} />
-          <CompletedTasks tasks={tasks} />
+      <div className="container mx-auto px-4 py-6 space-y-6">
+        <ChildrenList children={children} />
+        <TaskList tasks={tasks} />
+        <CompletedTasks tasks={tasks} />
       </div>
     </AppLayout>
   );

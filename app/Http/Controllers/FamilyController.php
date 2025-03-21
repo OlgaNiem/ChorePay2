@@ -33,11 +33,17 @@ class FamilyController extends Controller
     {
         try {
             $validatedData = $request->validated();
-            $validatedData['created_by'] = Auth::id();
-    
+
+            $user = Auth::user();
+            if (!$user || !$user->uuid) {
+                throw new \Exception('Authenticated user UUID is missing');
+            }
+
+            $validatedData['created_by'] = $user->uuid;
+
             Log::debug('Validated Data:', $validatedData);
-    
-            $family = $this->familyService->createFamily($validatedData);
+
+            $this->familyService->createFamily($validatedData);
 
             return redirect()->route('add-child')->with('message', 'Family created successfully. You can now join your family.');
 
@@ -48,4 +54,5 @@ class FamilyController extends Controller
                 ->with('error', 'Failed to create family. Please try again later.');
         }
     }
+
 }

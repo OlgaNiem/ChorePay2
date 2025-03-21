@@ -3,12 +3,7 @@ import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-
-interface Child {
-  id: number;
-  name: string;
-  avatar: string | null;
-}
+import type { Child } from '@/types';
 
 export default function ChildrenList({ children }: { children: Child[] }) {
   return (
@@ -28,7 +23,7 @@ export default function ChildrenList({ children }: { children: Child[] }) {
       <CardContent className="space-y-3">
         {children.length > 0 ? (
           children.map((child) => (
-            <div key={child.id} className="flex items-center justify-between border-b py-3 px-2">
+            <div key={child.uuid} className="flex items-center justify-between border-b py-3 px-2">
               <div className="flex items-center gap-4">
                 <Avatar className="h-12 w-12">
                   <AvatarImage src={child.avatar || '/placeholder.svg'} alt={child.name} />
@@ -36,7 +31,7 @@ export default function ChildrenList({ children }: { children: Child[] }) {
                 </Avatar>
                 <span className="text-lg font-medium">{child.name}</span>
               </div>
-              <Link href={route('child-profile', { child: child.id })}>
+              <Link href={route('child-profile', { child: child.uuid })}>
                 <Button variant="outline" size="sm" className="text-sm bg-blue-100 hover:bg-blue-200 border-blue-200 text-blue-700">
                   View Profile
                 </Button>

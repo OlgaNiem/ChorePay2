@@ -8,11 +8,7 @@ import TaskAssigneeSelect from "./TaskAssigneeSelect";
 import TaskPrioritySelector from "./TaskPrioritySelector";
 import TaskRewardInput from "./TaskRewardInput";
 import SubmitButton from "./SubmitButton";
-
-interface Child {
-  id: number;
-  name: string;
-}
+import type { Child } from "@/types"; 
 
 interface Props {
   children: Child[];
@@ -32,37 +28,40 @@ const NewTaskForm = ({ children, errors }: Props) => {
     e.preventDefault();
     setLoading(true);
 
-    router.post(route("store-task"), {
-      title,
-      description,
-      priority,
-      reward,
-      assigned_to: assignedTo,
-      due_date: date?.toISOString().split("T")[0],
-    }, {
-      onSuccess: () => {
-        setLoading(false);
-        router.visit(route("dashboard"));
+    router.post(
+      route("store-task"),
+      {
+        title,
+        description,
+        priority,
+        reward,
+        assigned_to: assignedTo,
+        due_date: date?.toISOString().split("T")[0],
       },
-      onError: () => setLoading(false),
-    });
+      {
+        onSuccess: () => {
+          setLoading(false);
+          router.visit(route("dashboard"));
+        },
+        onError: () => setLoading(false),
+      }
+    );
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <CardContent className="p-4 space-y-6">
         <TaskTitleInput value={title} setValue={setTitle} error={errors.title} />
-
         <TaskDescriptionInput value={description} setValue={setDescription} error={errors.description} />
-
         <TaskDueDatePicker date={date} setDate={setDate} />
-
-        <TaskAssigneeSelect children={children} value={assignedTo} setValue={setAssignedTo} error={errors.assigned_to} />
-
+        <TaskAssigneeSelect
+          children={children}
+          value={assignedTo}
+          setValue={setAssignedTo}
+          error={errors.assigned_to}
+        />
         <TaskPrioritySelector value={priority} setValue={setPriority} />
-
         <TaskRewardInput value={reward} setValue={setReward} error={errors.reward} />
-
         <SubmitButton loading={loading} />
       </CardContent>
     </form>

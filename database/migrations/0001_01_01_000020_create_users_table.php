@@ -15,7 +15,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->uuid('uuid')->unique();
             $table->string('name');
-            $table->string('email')->unique();
+            $table->string('email')->nullable()->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->enum('role', ['parent', 'child'])->default('parent')->index();
@@ -52,12 +52,14 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('family_id');
+            $table->dropForeign(['parent_id']);
+            $table->dropForeign(['family_id']);
+            $table->dropColumn(['parent_id', 'family_id']);
         });
 
         Schema::dropIfExists('users');
-
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
     }
+
 };

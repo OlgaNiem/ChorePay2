@@ -9,12 +9,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('families', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
+            $table->uuid('uuid')->unique();
             $table->string('name');
             //$table->foreignId('created_by')->nullable()->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
-        
     }
 
     public function down(): void

@@ -3,14 +3,7 @@ import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-
-interface Task {
-  id: number;
-  title: string;
-  reward: string;
-  status: 'pending' | 'completed';
-  assigned_to: number;
-}
+import type { Task } from '@/types';
 
 export default function TaskList({ tasks }: { tasks: Task[] }) {
   return (

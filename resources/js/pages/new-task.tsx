@@ -1,14 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { Head, usePage } from "@inertiajs/react";
 import { Card } from "@/components/ui/card";
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import NewTaskForm from "@/components/new-task/NewTaskForm";
-
-interface Child {
-  id: number;
-  name: string;
-}
+import type { Child } from "@/types";
 
 interface PageProps {
   auth: {
@@ -25,7 +21,6 @@ interface PageProps {
 
 const NewTask = () => {
   const { children = [], errors = {} } = usePage<PageProps>().props;
-  console.log("Children:", children);
 
   return (
     <Card className="min-h-screen w-full bg-gray-50 flex flex-col items-center justify-center p-6 rounded-none">

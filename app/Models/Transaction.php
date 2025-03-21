@@ -9,11 +9,6 @@ class Transaction extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'user_id',
         'task_id',
@@ -23,11 +18,11 @@ class Transaction extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id', 'uuid');
     }
 
     public function task()
     {
-        return $this->belongsTo(Task::class);
+        return $this->belongsTo(Task::class, 'task_id', 'uuid');
     }
 }

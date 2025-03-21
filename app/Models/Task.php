@@ -10,15 +10,21 @@ class Task extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'id'; 
-    protected $keyType = 'int';
-    public $incrementing = true; 
-
-    protected $fillable = ['uuid', 'title', 'description', 'priority', 'reward', 'status', 'assigned_to', 'created_by'];
+    protected $fillable = [
+        'uuid',
+        'title',
+        'description',
+        'priority',
+        'reward',
+        'status',
+        'assigned_to',
+        'created_by',
+    ];
 
     protected static function boot()
     {
         parent::boot();
+
         static::creating(function ($task) {
             if (empty($task->uuid)) {
                 $task->uuid = Str::uuid();

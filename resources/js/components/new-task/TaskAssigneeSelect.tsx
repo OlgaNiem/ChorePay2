@@ -1,11 +1,13 @@
 import React from "react";
 import { Label } from "@/components/ui/label";
-import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
-
-interface Child {
-  id: number;
-  name: string;
-}
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from "@/components/ui/select";
+import type { Child } from "@/types";
 
 interface Props {
   children: Child[];
@@ -16,7 +18,9 @@ interface Props {
 
 const TaskAssigneeSelect = ({ children, value, setValue, error }: Props) => (
   <div className="space-y-2">
-    <Label htmlFor="assigned" className="text-black font-medium">Assigned to</Label>
+    <Label htmlFor="assigned" className="text-black font-medium">
+      Assigned to
+    </Label>
     <Select value={value || "default"} onValueChange={setValue}>
       <SelectTrigger className="border-muted bg-muted/50">
         <SelectValue placeholder="Choose your child" />
@@ -24,12 +28,14 @@ const TaskAssigneeSelect = ({ children, value, setValue, error }: Props) => (
       <SelectContent>
         {children.length > 0 ? (
           children.map((child) => (
-            <SelectItem key={child.id} value={String(child.id)}>
+            <SelectItem key={child.uuid} value={child.uuid}>
               {child.name}
             </SelectItem>
           ))
         ) : (
-          <SelectItem value="default" disabled>No children available</SelectItem>
+          <SelectItem value="default" disabled>
+            No children available
+          </SelectItem>
         )}
       </SelectContent>
     </Select>
