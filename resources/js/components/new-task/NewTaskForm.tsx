@@ -9,6 +9,7 @@ import TaskPrioritySelector from "./TaskPrioritySelector";
 import TaskRewardInput from "./TaskRewardInput";
 import SubmitButton from "./SubmitButton";
 import { toast } from "sonner";
+import type {Priority } from "@/lib/priority";
 import type { Child } from "@/types"; 
 
 interface Props {
@@ -19,7 +20,7 @@ interface Props {
 const NewTaskForm = ({ children, errors }: Props) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [priority, setPriority] = useState("high");
+  const [priority, setPriority] = useState<Priority>("high");
   const [reward, setReward] = useState("");
   const [assignedTo, setAssignedTo] = useState("");
   const [date, setDate] = useState<Date | undefined>(new Date());

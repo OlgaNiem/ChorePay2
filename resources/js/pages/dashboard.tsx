@@ -6,7 +6,7 @@ import CompletedTasks from '@/components/dashboard/CompletedTasks';
 import type { PageProps } from '@/types';
 
 export default function Dashboard() {
-  const { auth, children = [], tasks = [] } = usePage<PageProps>().props;
+  const { children = [], tasks = [] } = usePage<PageProps>().props;
 
   const taskList = "data" in tasks ? tasks.data : tasks;
 
@@ -18,6 +18,7 @@ export default function Dashboard() {
         <TaskList tasks={taskList} />
         <div className="flex justify-center">
             <button
+              type='button'
               onClick={() => router.visit(route("tasks.index"))}
               className="w-full sm:w-auto px-4 py-2 rounded-md shadow-md bg-[#809eff] text-[#090a0e] text-sm font-medium font-poppins hover:bg-blue-600 transition"
             >
