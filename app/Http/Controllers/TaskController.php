@@ -6,9 +6,9 @@ use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
-use Illuminate\Support\Facades\Log;
 
 class TaskController extends Controller
 {
@@ -17,7 +17,7 @@ class TaskController extends Controller
         $user = Auth::user();
 
         return Inertia::render('new-task', [
-            'children' => User::where('parent_id', $user->id)
+            'children' => User::where('parent_id', $user->uuid)
                 ->where('role', 'child')
                 ->get(['uuid', 'name']),
         ]);

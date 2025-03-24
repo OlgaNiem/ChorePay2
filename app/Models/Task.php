@@ -10,6 +10,10 @@ class Task extends Model
 {
     use HasFactory;
 
+    protected $keyType = 'string';
+    public $incrementing = false;
+    protected $primaryKey = 'id';
+
     protected $fillable = [
         'uuid',
         'title',
@@ -21,13 +25,15 @@ class Task extends Model
         'created_by',
     ];
 
-    protected static function boot()
+    protected static function booted(): void
     {
-        parent::boot();
-
         static::creating(function ($task) {
+            if (empty($task->id)) {
+                $task->id = (string) Str::uuid();
+            }
+
             if (empty($task->uuid)) {
-                $task->uuid = Str::uuid();
+                $task->uuid = (string) Str::uuid();
             }
         });
     }
