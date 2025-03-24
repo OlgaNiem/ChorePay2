@@ -8,6 +8,7 @@ import TaskAssigneeSelect from "./TaskAssigneeSelect";
 import TaskPrioritySelector from "./TaskPrioritySelector";
 import TaskRewardInput from "./TaskRewardInput";
 import SubmitButton from "./SubmitButton";
+import { toast } from "sonner";
 import type { Child } from "@/types"; 
 
 interface Props {
@@ -36,14 +37,19 @@ const NewTaskForm = ({ children, errors }: Props) => {
         priority,
         reward,
         assigned_to: assignedTo,
-        due_date: date?.toISOString().split("T")[0],
+        due_date: date?.toLocaleDateString("en-CA"),
       },
       {
         onSuccess: () => {
           setLoading(false);
+          //toast.success("Task created!"); 
           router.visit(route("dashboard"));
         },
-        onError: () => setLoading(false),
+
+        onError: () => {
+          setLoading(false);
+          toast.error("Something went wrong.");
+        },
       }
     );
   };

@@ -1,4 +1,3 @@
-import React from "react";
 import { Label } from "@/components/ui/label";
 import { Calendar } from "@/components/ui/calendar";
 
@@ -15,6 +14,7 @@ const TaskDueDatePicker = ({ date, setDate }: Props) => (
         mode="single"
         selected={date}
         onSelect={setDate}
+        disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
         className="mx-auto"
       />
     </div>

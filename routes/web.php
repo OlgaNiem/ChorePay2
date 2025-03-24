@@ -43,6 +43,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
     Route::get('/new-task', [TaskController::class, 'create'])->name('new-task');
+    Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
     Route::post('/tasks', [TaskController::class, 'store'])->name('store-task');
 
     Route::get('/child-profile/{child}', [ChildController::class, 'profile'])->name('child-profile');

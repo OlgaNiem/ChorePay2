@@ -21,6 +21,7 @@ class Task extends Model
         'priority',
         'reward',
         'status',
+        'due_date',
         'assigned_to',
         'created_by',
     ];
@@ -46,5 +47,10 @@ class Task extends Model
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by', 'uuid');
+    }
+    
+    public function assignee()
+    {
+        return $this->belongsTo(User::class, 'assigned_to', 'uuid');
     }
 }

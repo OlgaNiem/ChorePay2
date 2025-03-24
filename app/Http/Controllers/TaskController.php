@@ -31,6 +31,7 @@ class TaskController extends Controller
             'priority' => 'required|in:low,medium,high',
             'reward' => 'required|numeric|min:0',
             'assigned_to' => 'required|exists:users,uuid',
+            'due_date' => ['required', 'date', 'after_or_equal:today'],
         ]);
 
         try {
@@ -40,14 +41,28 @@ class TaskController extends Controller
                 'priority' => $validated['priority'],
                 'reward' => $validated['reward'],
                 'status' => 'pending',
+                'due_date' => $validated['due_date'] ?? null,
                 'assigned_to' => $validated['assigned_to'],
                 'created_by' => Auth::user()?->uuid,
             ]);
 
-            return redirect()->route('dashboard')->with('message', 'Task created successfully!');
+            return redirect()->back();
         } catch (\Exception $e) {
             Log::error('Task creation failed: ' . $e->getMessage());
             return back()->withErrors(['error' => 'Something went wrong. Please try again.']);
         }
+    }
+
+    public function index(): Response
+    {
+        $tasks = Task::with(['assignee' => function ($query) {
+            $query->select('uuid', 'name');
+        }])
+        ->where('status', '!=', 'completed')
+        ->paginate(10);
+    
+        return Inertia::render('tasks', [
+            'tasks' => $tasks,
+        ]);       
     }
 }

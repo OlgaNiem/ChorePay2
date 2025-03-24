@@ -15,7 +15,8 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->enum('priority', ['low', 'medium', 'high'])->default('high');
             $table->decimal('reward', 10, 2);
-            $table->enum('status', ['pending', 'completed'])->default('pending'); 
+            $table->enum('status', ['pending', 'completed'])->default('pending');
+            $table->date('due_date')->nullable();
 
             $table->uuid('assigned_to')->nullable();
             $table->uuid('created_by');
