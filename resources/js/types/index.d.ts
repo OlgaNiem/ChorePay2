@@ -5,6 +5,11 @@ export interface Auth {
     user: User;
 }
 
+type LoginForm = {
+    email: string;
+    password: string;
+    remember: boolean;
+}
 export interface BreadcrumbItem {
     title: string;
     href: string;
