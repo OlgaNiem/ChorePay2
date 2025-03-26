@@ -1,88 +1,75 @@
-import React, { useState } from 'react';
-import { usePage, router } from '@inertiajs/react';
-import { Button } from '@/components/ui/button'; 
+import { useForm } from '@inertiajs/react';
+import { LoaderCircle } from 'lucide-react';
+import { FormEventHandler } from 'react';
 import { Head } from '@inertiajs/react';
+import InputError from '@/components/input-error';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
-interface Errors {
-  name?: string;
-}
 
-const CreateFamily = () => {
-  const { errors } = usePage().props;
-  const [familyName, setFamilyName] = useState<string>('');
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+export default function CreateFamily() {
+  const { data, setData, post, processing, errors } = useForm({
+    name: '',
+  });
 
-  const handleError = (errors: Errors) => {
-    if (errors.name) {
-      console.error("Error creating family:", errors.name);
-    } else {
-      console.error("Error creating family: Unknown error");
-    }
-  };
-
-  const handleSuccess = () => {
-      
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const submit: FormEventHandler = (e) => {
     e.preventDefault();
-
-    if (!familyName.trim()) {
-      console.error("Family name is empty!");
-      return;
-    }
-    setIsLoading(true);
-      router.post(route('store-family'), { name: familyName }, {
-      onSuccess: handleSuccess,
-      onError: handleError,
-      onFinish: () => setIsLoading(false) 
-    });
+    post(route('store-family'));
   };
 
   return (
-    <div className="screen bg-[#F4EDEC] flex flex-col items-center justify-center min-h-screen p-6">
+    <div className="bg-[#f4edee] min-h-screen font-quicksand">
       <Head title="Create Family" />
 
       <div
-        className="w-[375px] h-[314px] rounded-lg bg-cover bg-center bg-no-repeat"
+        className="
+          w-full 
+          h-[250px] 
+          sm:h-[300px] 
+          md:h-[400px] 
+          lg:h-[480px] 
+          xl:h-[550px] 
+          bg-cover 
+          bg-[center_40%] 
+          bg-no-repeat 
+          rounded-b-[8px]"
         style={{ backgroundImage: "url('/create-family.png')" }}
       />
 
-      <div className="mt-6">
-        <h2 className="text-2xl font-semibold text-center text-gray-900">
-          Create Your Family
-        </h2>
+      <div className="flex flex-col items-center mt-14 px-8">
+      <h1 className="text-[#030303] text-2xl sm:text-3xl md:text-4xl font-bold leading-tight text-center mb-6 font-poppins">
+        Create your family
+      </h1>
+
+        <form className="flex flex-col gap-6 w-full max-w-md" onSubmit={submit}>
+          <div className="grid gap-6">
+            <div className="grid gap-2">
+              <Input
+                id="name"
+                type="text"
+                required
+                autoFocus
+                autoComplete="off"
+                value={data.name}
+                onChange={(e) => setData('name', e.target.value)}
+                disabled={processing}
+                placeholder="Write your family name here..."
+                className="mt-2 w-full h-[46px] px-2 border-0 rounded-md shadow-sm bg-[#fdfdfd] text-[#6b7280] text-sm font-medium"
+              />
+              <InputError message={errors.name} className="mt-2" />
+            </div>
+
+            <Button
+              type="submit"
+              className="mt-5 mb-5 w-full h-[44px] px-2 border-0 rounded-md shadow-md bg-[#ffd500] text-black text-sm font-poppins font-bold  hover:bg-yellow-400"
+              disabled={processing}
+            >
+              {processing && <LoaderCircle className="h-4 w-4 animate-spin mr-2" />}
+              Create family
+            </Button>
+          </div>
+        </form>
       </div>
-
-      <form onSubmit={handleSubmit} className="mt-6 w-full max-w-sm space-y-4">
-        {errors.name && (
-          <div className="text-red-500 text-sm text-center">{errors.name}</div>
-        )}
-
-        <div>
-          <label htmlFor="familyName" className="block text-lg text-gray-700 font-medium">
-            Family Name
-          </label>
-          <input
-            id="familyName"
-            type="text"
-            value={familyName}
-            onChange={(e) => setFamilyName(e.target.value)}
-            placeholder="Write your family name here..."
-            className="w-full mt-2 p-3 border border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-yellow-400 placeholder-[#6B7280] text-[#6B7280]"
-          />
-        </div>
-
-        <Button 
-          type="submit" 
-          className="w-full py-3 text-lg bg-yellow-500 text-black font-semibold rounded-lg"
-          disabled={isLoading} 
-        >
-          {isLoading ? 'Creating...' : 'Create Family'}
-        </Button>
-      </form>
     </div>
   );
-};
-
-export default CreateFamily;
+}

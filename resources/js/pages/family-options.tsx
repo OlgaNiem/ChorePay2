@@ -1,58 +1,63 @@
 import { Head, Link, usePage } from '@inertiajs/react';
-import Screen from '@/components/welcomePage/Screen';
 import { Button } from '@/components/ui/button';
-import { useEffect } from 'react';
-import { router } from '@inertiajs/react';
-
-interface Family {
-    id: number;
-    name: string;
-}
-
-interface PageProps extends Record<string, unknown> {
-    auth: {
-        user: {
-            id: number;
-            name: string;
-            email: string;
-        } | null;
-    };
-    family?: Family | null;
-}
+import Screen from '@/components/welcomePage/Screen';
+import type { PageProps } from '@/types';
 
 const FamilyOptions = () => {
-    const { auth, family } = usePage<PageProps>().props;
+  const { family } = usePage<PageProps>().props as PageProps;
 
-    useEffect(() => {
-        if (!auth?.user) {
-            router.visit(route('login'));
-        }
-    }, [auth]);
+  return (
+    <Screen>
+      <Head title="Family Options" />
 
-    return (
-        <Screen>
-            <div className="flex min-h-screen flex-col items-center justify-center p-6 text-[#EDEDEC]">
-                <Head title="Family Options" />
-                <h1 className="text-2xl font-semibold">Family Options</h1>
-
-                <div className="mt-6 flex flex-col gap-6 items-center">
+      <div className="flex min-h-screen flex-col items-center justify-center px-6 bg-[url('/family-options.png')] bg-cover bg-center bg-no-repeat font-poppins">
+        <div className="w-full max-w-sm flex flex-col items-center gap-8">
+            <div className="flex flex-col gap-10 sm:gap-[70px] w-full">
+                <div className="relative">
                     <Link href={route('create-family')}>
-                        <Button className="w-full py-3 text-lg">Create Family</Button>
+                    <Button className="w-full h-[69px] pr-10 bg-[#FFD500] text-black text-sm font-bold rounded-md shadow-md hover:bg-yellow-400">
+                        Create Family
+                    </Button>
                     </Link>
+                    <img
+                    src="/control_point.svg"
+                    alt="Create Icon"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5"
+                    />
+                </div>
 
+                <div className="relative">
                     <Link href={route('join-family')}>
-                        <Button className="w-full py-3 text-lg">Join Family Member</Button>
+                    <Button className="w-full h-[69px] pr-10 bg-[#FFD500] text-black text-sm font-bold rounded-md shadow-md hover:bg-yellow-400">
+                        Join Family Member
+                    </Button>
                     </Link>
+                    <img
+                    src="/control_point_duplicate.svg"
+                    alt="Join Icon"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5"
+                    />
+                </div>
 
-                    {family && (
-                        <Link href={route('return-family')}>
-                            <Button className="w-full py-3 text-lg">Return to Your Family</Button>
-                        </Link>
-                    )}
+                {!!family && (
+                    <div className="relative">
+                    <Link href={route('return-family')}>
+                        <Button className="w-full h-[69px] pr-10 bg-[#FFD500] text-black text-sm font-bold rounded-md shadow-md hover:bg-yellow-400">
+                        Return to Your Family
+                        </Button>
+                    </Link>
+                    <img
+                        src="/undo.svg"
+                        alt="Return Icon"
+                        className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5"
+                    />
+                    </div>
+                )}
                 </div>
             </div>
-        </Screen>
-    );
+      </div>
+    </Screen>
+  );
 };
 
 export default FamilyOptions;

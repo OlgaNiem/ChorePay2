@@ -20,9 +20,8 @@ Route::get('choose-role', function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('family-options', function () {
-        return Inertia::render('family-options');
-    })->name('family-options');
+    Route::inertia('family-options', 'family-options')->name('family-options');
+    
 
     Route::get('create-family', [FamilyController::class, 'create'])->name('create-family');
     Route::post('create-family', [FamilyController::class, 'store'])->name('store-family');
@@ -36,6 +35,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('return-family', function () {
         return Inertia::render('return-family');
     })->name('return-family');
+    Route::post('return-family', [FamilyController::class, 'join'])->name('return-family.store');
 
     Route::get('/add-child', [ChildController::class, 'create'])->name('add-child');
     Route::post('/store-child-profile', [ChildController::class, 'store'])->name('store-child-profile');
