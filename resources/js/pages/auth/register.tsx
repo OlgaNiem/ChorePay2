@@ -1,30 +1,17 @@
 import { Head, useForm, usePage } from '@inertiajs/react';
-import { LoaderCircle } from 'lucide-react';
-import { FormEventHandler, useEffect } from 'react';
-
+import { LoaderCircle, Eye, EyeOff } from 'lucide-react';
+import { FormEventHandler, useEffect, useState } from 'react';
 import InputError from '@/components/input-error';
 import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-
-type User = {
-    id: number;
-    name: string;
-    email: string;
-};
-
-type PageProps = {
-    role?: string;
-    auth?: {
-        user?: User;
-    };
-};
+import type { PageProps, RegisterForm } from '@/types';
 
 export default function Register() {
     const { role, auth } = usePage<PageProps>().props;
 
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { data, setData, post, processing, errors, reset } = useForm<RegisterForm>({
         name: '',
         email: '',
         password: '',
@@ -38,6 +25,9 @@ export default function Register() {
             onFinish: () => reset('password', 'password_confirmation'),
         });
     };
+
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     useEffect(() => {
         if (auth?.user) {
@@ -56,7 +46,7 @@ export default function Register() {
                     lg:h-[480px] 
                     xl:h-[550px] 
                     bg-cover 
-                    bg-[center_25%] 
+                    bg-[center_10%] 
                     bg-no-repeat 
                     rounded-b-[8px]"
                 style={{ backgroundImage: "url('/signUp.png')" }}
@@ -72,7 +62,6 @@ export default function Register() {
                         <Input type="hidden" value={data.role} name="role" />
 
                         <div className="grid gap-2">
-                        <Label htmlFor="name" className="text-[#4a4c7f] text-xs">Name</Label>
                             <Input
                                 id="name"
                                 type="text"
@@ -89,7 +78,6 @@ export default function Register() {
                         </div>
 
                         <div className="grid gap-2">
-                            <Label htmlFor="email" className="text-[#4a4c7f] text-xs">Email address</Label>
                             <Input
                                 id="email"
                                 type="email"
@@ -104,37 +92,57 @@ export default function Register() {
                             <InputError message={errors.email} />
                         </div>
 
-                        <div className="grid gap-2">
-                            <Label htmlFor="password" className="text-[#4a4c7f] text-xs">Password</Label>
-                            <Input
+                        <div className="grid gap-2 mt-2 relative">
+                            <div className="relative flex items-center">
+                                <Input
                                 id="password"
-                                type="password"
+                                type={showPassword ? 'text' : 'password'}
                                 required
                                 autoComplete="new-password"
                                 value={data.password}
                                 onChange={(e) => setData('password', e.target.value)}
                                 disabled={processing}
                                 placeholder="Password"
-                                className="mt-2 w-full h-[46px] px-2 border-0 rounded-md shadow-sm bg-[#fdfdfd] text-[#94a3b8] text-sm font-medium"
-                            />
+                                className="w-full h-[46px] px-2 pr-10 border-0 rounded-md shadow-sm bg-[#fdfdfd] text-[#94a3b8] text-sm font-medium"
+                                />
+                                <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-3 text-[#4a4c7f]"
+                                tabIndex={-1}
+                                >
+                                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                </button>
+                            </div>
+
                             <InputError message={errors.password} />
                         </div>
 
-                        <div className="grid gap-2">
-                            <Label htmlFor="password_confirmation" className="text-[#4a4c7f] text-xs">Confirm password</Label>
-                            <Input
-                                id="password_confirmation"
-                                type="password"
-                                required
-                                autoComplete="new-password"
-                                value={data.password_confirmation}
-                                onChange={(e) => setData('password_confirmation', e.target.value)}
-                                disabled={processing}
-                                placeholder="Confirm password"
-                                className="mt-2 w-full h-[46px] px-2 border-0 rounded-md shadow-sm bg-[#fdfdfd] text-[#94a3b8] text-sm font-medium"
-                            />
-                            <InputError message={errors.password_confirmation} />
-                        </div>
+                            <div className="grid gap-2 mt-2 relative">
+                                <div className="relative flex items-center">
+                                    <Input
+                                    id="password_confirmation"
+                                    type={showConfirmPassword ? 'text' : 'password'}
+                                    required
+                                    autoComplete="new-password"
+                                    value={data.password_confirmation}
+                                    onChange={(e) => setData('password_confirmation', e.target.value)}
+                                    disabled={processing}
+                                    placeholder="Confirm password"
+                                    className="w-full h-[46px] px-2 pr-10 border-0 rounded-md shadow-sm bg-[#fdfdfd] text-[#94a3b8] text-sm font-medium"
+                                    />
+                                    <button
+                                    type="button"
+                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                    className="absolute right-3 text-[#4a4c7f]"
+                                    tabIndex={-1}
+                                    >
+                                    {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                    </button>
+                                </div>
+
+                                <InputError message={errors.password_confirmation} />
+                            </div>
 
                         <Button
                             type="submit"

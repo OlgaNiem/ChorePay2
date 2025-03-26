@@ -1,39 +1,6 @@
 import { LucideIcon } from 'lucide-react';
 import type { Config } from 'ziggy-js';
 
-export interface Auth {
-    user: User;
-}
-
-type LoginForm = {
-    email: string;
-    password: string;
-    remember: boolean;
-}
-export interface BreadcrumbItem {
-    title: string;
-    href: string;
-}
-
-export interface NavGroup {
-    title: string;
-    items: NavItem[];
-}
-
-export interface NavItem {
-    title: string;
-    url: string;
-    icon?: LucideIcon | null;
-    isActive?: boolean;
-}
-
-export interface SharedData {
-    name: string;
-    quote: { message: string; author: string };
-    auth: Auth;
-    ziggy: Config & { location: string };
-    [key: string]: unknown;
-}
 
 export interface User {
     id: number;
@@ -52,6 +19,58 @@ export interface Child {
     name: string;
     avatar: string | null;
 }
+
+export interface Auth {
+    user: User;
+}
+
+export interface RegisterForm {
+    name: string;
+    email: string;
+    password: string;
+    password_confirmation: string;
+    role: string;
+    [key: string]: string;
+  }
+
+export interface LoginForm {
+    email: string;
+    password: string;
+    remember: boolean;
+    [key: string]: string | boolean;
+}
+
+
+ 
+export interface BreadcrumbItem {
+    title: string;
+    href: string;
+}
+
+
+export interface NavItem {
+    title: string;
+    url: string;
+    icon?: LucideIcon | null;
+    isActive?: boolean;
+}
+
+export interface NavGroup {
+    title: string;
+    items: NavItem[];
+}
+
+
+
+export interface SharedData {
+    name: string;
+    quote: { message: string; author: string };
+    auth: Auth;
+    ziggy: Config & { location: string };
+    [key: string]: unknown;
+}
+
+
 
 export interface Task {
     id: string;
@@ -88,7 +107,10 @@ export interface PaginatedTasks {
     total: number;
 }
 
+
+
 export interface PageProps extends Record<string, unknown> {
+    role?: string;
     auth: {
         user: User | null;
     };
@@ -96,4 +118,3 @@ export interface PageProps extends Record<string, unknown> {
     tasks?: Task[] | PaginatedTasks;
     errors?: Record<string, string>;
 }
-

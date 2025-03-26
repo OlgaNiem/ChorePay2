@@ -1,6 +1,6 @@
 import { Head, useForm } from '@inertiajs/react';
-import { LoaderCircle } from 'lucide-react';
-import { FormEventHandler } from 'react';
+import { LoaderCircle, Eye, EyeOff } from 'lucide-react';
+import { FormEventHandler, useState } from 'react';
 
 import InputError from '@/components/input-error';
 import TextLink from '@/components/text-link';
@@ -29,6 +29,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
             onFinish: () => reset('password'),
         });
     };
+    const [showPassword, setShowPassword] = useState(false);
 
     return (
         <>
@@ -73,30 +74,28 @@ export default function Login({ status, canResetPassword }: LoginProps) {
 
                         </div>
 
-                            <div>
-                                <Input
-                                    id="password"
-                                    type="password"
-                                    required
-                                    autoComplete="current-password"
-                                    value={data.password}
-                                    onChange={(e) => setData('password', e.target.value)}
-                                    placeholder="Password"
-                                    className="h-12 px-2 rounded-md shadow-sm bg-[#fdfdfd] placeholder:text-slate-400 font-medium text-sm"
-                                />
-                                <InputError message={errors.password} />
-
-                                {canResetPassword && (
-                                    <div className="text-right mt-1">
-                                        <TextLink
-                                            href={route('password.request')}
-                                            className="text-xs text-[#4a4c7f] font-quicksand"
-                                        >
-                                            Forgot your password?
-                                        </TextLink>
-                                    </div>
-                                )}
+                        <div className="relative">
+                            <Input
+                                id="password"
+                                type={showPassword ? 'text' : 'password'}
+                                required
+                                autoComplete="current-password"
+                                value={data.password}
+                                onChange={(e) => setData('password', e.target.value)}
+                                placeholder="Password"
+                                className="h-12 px-2 pr-10 rounded-md shadow-sm bg-[#fdfdfd] placeholder:text-slate-400 font-medium text-sm"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#4a4c7f]"
+                                tabIndex={-1}
+                            >
+                                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                            </button>
+                            <InputError message={errors.password} />
                             </div>
+
 
                             <div className="flex items-center space-x-2">
                                 <Checkbox
@@ -104,22 +103,24 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                                     name="remember"
                                     checked={data.remember}
                                     onClick={() => setData('remember', !data.remember)}
+                                    className="bg-white border border-gray-300 data-[state=checked]:bg-[#4a4c7f] data-[state=checked]:border-[#4a4c7f]"
                                 />
                                 <Label htmlFor="remember" className="text-sm font-quicksand">
                                     Remember me
                                 </Label>
                             </div>
+
                         <Button
                             type="submit"
-                            className="w-full h-11 rounded-md bg-[#f9cc18] text-black font-bold shadow-md hover:bg-yellow-400"
+                            className=" mb-6 w-full  h-11 rounded-md bg-[#f9cc18] text-black font-bold shadow-md hover:bg-yellow-400"
                             disabled={processing}
                         >
                             {processing && <LoaderCircle className="h-4 w-4 animate-spin mr-2" />}
-                            Log In
+                            Log in
                         </Button>
                     </form>
 
-                    <div className="mt-6 text-base font-quicksand flex justify-center items-center">
+                    <div className="text-sm mt-5 mb-5 flex justify-center items-center">
                         <span className="text-[#090a0e]">Don't have an account?</span>
                         <TextLink
                             href={route('register')}
@@ -128,6 +129,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                             Sign up
                         </TextLink>
                     </div>
+
 
 
                     {status && (

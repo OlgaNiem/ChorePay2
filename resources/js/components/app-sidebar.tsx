@@ -17,13 +17,13 @@ const mainNavItems: NavItem[] = [
 
 const footerNavItems: NavItem[] = [
     {
-        title: 'Repository',
-        url: 'https://github.com/laravel/react-starter-kit',
+        title: 'Tasks',
+        url: '',
         icon: Folder,
     },
     {
-        title: 'Documentation',
-        url: 'https://laravel.com/docs/starter-kits',
+        title: 'Balance',
+        url: '',
         icon: BookOpen,
     },
 ];
@@ -42,15 +42,16 @@ export function AppSidebar() {
                     </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarHeader>
-
-            <SidebarContent>
+            <SidebarContent className="flex flex-col flex-1 justify-start">
                 <NavMain items={mainNavItems} />
+                <div className="mt-auto">
+                    <NavFooter items={footerNavItems} />
+                </div>
             </SidebarContent>
-
-            <SidebarFooter>
-                <NavFooter items={footerNavItems} className="mt-auto" />
+            <SidebarFooter className="px-2 pt-2 pb-4 bg-white">
                 <NavUser />
             </SidebarFooter>
         </Sidebar>
     );
 }
+
