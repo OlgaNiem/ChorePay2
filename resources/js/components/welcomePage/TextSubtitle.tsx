@@ -1,8 +1,6 @@
-import React from 'react';
-
 const TextSubtitle = ({ text }: { text: string }) => {
   return (
-    <p className="text-[#ffd500] text-xl text-center">
+    <p className="text-[#ffd500] text-lg sm:text-xl text-center font-quicksand">
       {text}
     </p>
   );
