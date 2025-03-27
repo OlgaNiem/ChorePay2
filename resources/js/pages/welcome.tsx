@@ -16,7 +16,7 @@ export default function Welcome() {
         <div className="mb-5">
           <TextSubtitle text="Little tasks, big rewards!" />
         </div>
-        <div className="my-11">
+        <div className="w-full max-w-2xl mx-auto">
           <Image />
         </div>
         <div className="mt-6">
