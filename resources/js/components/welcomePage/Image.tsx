@@ -8,16 +8,19 @@ const Image = ({ image }: { image?: string }) => {
       className="
         w-full 
         max-w-2xl 
-        h-[300px] 
-        sm:h-[350px] 
+        h-[320px] 
+        sm:h-[370px] 
         md:h-[450px] 
-        lg:h-[480px] 
+        lg:h-[500px] 
         xl:h-[550px] 
         bg-[center_10%] 
         bg-cover 
         bg-no-repeat 
         rounded-xl 
         mx-auto
+        transition-all 
+        duration-300 
+        ease-in-out
       "
       style={{ backgroundImage: `url(${image ?? defaultProps.image})` }}
     />
