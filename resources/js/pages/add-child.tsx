@@ -119,7 +119,7 @@ export default function AddChild() {
 
             <Button
               type="submit"
-              className="mt-6 w-full h-[44px] px-2 border-0 rounded-md shadow-md bg-[#809eff] text-black text-sm font-poppins font-bold"
+              className="mt-5 mb-5 w-full h-[44px] px-2 border-0 rounded-md shadow-md bg-[#809eff] text-black text-sm font-poppins font-bold"
               disabled={isLoading}
             >
               {isLoading && <LoaderCircle className="h-4 w-4 animate-spin mr-2" />}

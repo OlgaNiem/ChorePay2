@@ -36,7 +36,7 @@ class ChildController extends Controller
                 'role' => 'child',
             ]);
 
-            return redirect()->route('child-profile', $child->uuid)
+            return redirect()->route('dashboard')
                 ->with('message', 'Child profile created successfully!');
         } catch (\Exception $e) {
             Log::error('Error creating child profile: ' . $e->getMessage());
