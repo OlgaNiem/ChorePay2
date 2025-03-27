@@ -8,7 +8,6 @@ import TaskAssigneeSelect from "./TaskAssigneeSelect";
 import TaskPrioritySelector from "./TaskPrioritySelector";
 import TaskRewardInput from "./TaskRewardInput";
 import SubmitButton from "./SubmitButton";
-import { toast } from "sonner";
 import type {Priority } from "@/lib/priority";
 import type { Child } from "@/types"; 
 
@@ -43,13 +42,11 @@ const NewTaskForm = ({ children, errors }: Props) => {
       {
         onSuccess: () => {
           setLoading(false);
-          //toast.success("Task created!"); 
-          router.visit(route("dashboard"));
         },
 
         onError: () => {
           setLoading(false);
-          toast.error("Something went wrong.");
+          console.error("Something went wrong.");
         },
       }
     );

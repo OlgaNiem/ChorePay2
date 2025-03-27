@@ -46,7 +46,7 @@ class TaskController extends Controller
                 'created_by' => Auth::user()?->uuid,
             ]);
 
-            return redirect()->back();
+            return Inertia::location(route('dashboard'));
         } catch (\Exception $e) {
             Log::error('Task creation failed: ' . $e->getMessage());
             return back()->withErrors(['error' => 'Something went wrong. Please try again.']);

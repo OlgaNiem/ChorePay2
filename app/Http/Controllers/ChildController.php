@@ -36,8 +36,7 @@ class ChildController extends Controller
                 'role' => 'child',
             ]);
 
-            return redirect()->route('dashboard')
-                ->with('message', 'Child profile created successfully!');
+            return Inertia::location(route('dashboard'));
         } catch (\Exception $e) {
             Log::error('Error creating child profile: ' . $e->getMessage());
             return back()->withErrors(['error' => 'Something went wrong! Please try again later.']);

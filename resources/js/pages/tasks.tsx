@@ -12,9 +12,13 @@ interface Props {
 export default function AllTasks({ tasks }: Props) {
   const taskList = tasks.data;
 
-  const highPriority = taskList.filter((t) => t.priority === "high");
+  const highPriority = taskList.filter(
+    (t) => t.priority === "high" || isToday(parseISO(t.due_date))
+  );
+  
   const upcoming = taskList.filter(
-    (t) => t.priority !== "high" && !isToday(parseISO(t.due_date))
+    (t) =>
+      !highPriority.includes(t) 
   );
 
   const handlePageChange = (url: string | null) => {
@@ -75,30 +79,62 @@ function TaskSection({ title, tasks }: { title: string; tasks: Task[] }) {
 
       {open && (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {tasks.map((task) => (
-            <Card key={task.id} className="rounded-2xl shadow-md hover:shadow-lg transition">
-              <CardContent className="p-4 space-y-2">
-                <h2 className="text-xl font-semibold">{task.title}</h2>
-                <p className="text-sm text-muted-foreground">{task.description}</p>
-                <div className="text-sm space-y-1 pt-2">
-                  <p><strong>Priority:</strong> {getPriorityLabel(task.priority)}</p>
-                  <p><strong>Reward:</strong> €{task.reward}</p>
-                  <p><strong>Status:</strong> {task.status}</p>
-                  <p><strong>Due:</strong> {task.due_date}</p>
-                  <p><strong>Assigned to:</strong> {task.assignee?.name ?? 'Unknown'}</p>
-                  {task.assignee?.avatar && (
-                    <img
-                      src={task.assignee.avatar}
-                      alt={`${task.assignee.name}'s avatar`}
-                      className="w-10 h-10 rounded-full mt-1"
-                    />
+          {tasks.map((task) => {
+            const isDueToday = isToday(parseISO(task.due_date));
+
+            return (
+              <Card key={task.id} className="rounded-2xl shadow-md hover:shadow-lg transition">
+                <CardContent className="p-4 space-y-3">
+                  <div className="flex justify-between items-start">
+                    <h2 className="text-lg font-semibold text-black">{task.title}</h2>
+                    {isDueToday && (
+                      <span className="text-xs px-2 py-1 bg-red-100 text-red-600 rounded">
+                        Due Today
+                      </span>
+                    )}
+                  </div>
+
+                  {task.description && (
+                    <p className="text-sm text-gray-500">{task.description}</p>
                   )}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+
+                  <div className="text-sm space-y-1 border-t pt-2">
+                    <p>
+                      <span className="font-medium">Priority:</span>{" "}
+                      {getPriorityLabel(task.priority)}
+                    </p>
+                    <p>
+                      <span className="font-medium">Reward:</span> €{task.reward}
+                    </p>
+                    <p>
+                      <span className="font-medium">Status:</span> {task.status}
+                    </p>
+                    <p>
+                      <span className="font-medium">Due:</span> {task.due_date}
+                    </p>
+                    <p>
+                      <span className="font-medium">Assigned to:</span>{" "}
+                      {task.assignee?.name ?? "Unknown"}
+                    </p>
+                  </div>
+
+                  {task.assignee?.avatar && (
+                    <div className="pt-2 flex items-center gap-2">
+                      <img
+                        src={task.assignee.avatar}
+                        alt={`${task.assignee.name}'s avatar`}
+                        className="w-8 h-8 rounded-full"
+                      />
+                      <span className="text-sm text-gray-700">{task.assignee.name}</span>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
       )}
     </div>
   );
 }
+
