@@ -1,125 +1,133 @@
-import React, { useState } from 'react';
 import { Head, usePage, router } from '@inertiajs/react';
+import { Eye, EyeOff, LoaderCircle } from 'lucide-react';
+import { useState, FormEvent } from 'react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import InputError from '@/components/input-error';
 
-const AddChild = () => {
+export default function AddChild() {
   const { errors } = usePage().props;
   const [fullName, setFullName] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      console.error("Passwords do not match!");
+      console.error('Passwords do not match!');
       return;
     }
 
     setIsLoading(true);
 
-    router.post(route('store-child-profile'), { 
-      name: fullName,  
-      password, 
-      password_confirmation: confirmPassword  
-    }, {
-      onSuccess: () => {
-        console.log('Child profile created successfully!');
+    router.post(
+      route('store-child-profile'),
+      {
+        name: fullName,
+        password,
+        password_confirmation: confirmPassword,
       },
-      onError: (errors) => {
-        console.error("Error creating child profile:", errors);
-      },
-      onFinish: () => setIsLoading(false)
-    });
+      {
+        onFinish: () => setIsLoading(false),
+      }
+    );
   };
 
   return (
-    <div className="screen bg-[#F4EDEC] flex flex-col items-center justify-center min-h-screen p-6">
-      <Head title="Create Profile for Your Child" />
+    <div className="min-h-screen bg-[#F4EDEC] flex flex-col justify-start pt-0 font-quicksand">
+      <Head title="Create profile for your child" />
+        <div className="
+          w-full 
+          h-[250px] 
+          sm:h-[300px] 
+          md:h-[400px] 
+          lg:h-[480px] 
+          xl:h-[550px] 
+          bg-cover 
+          bg-[center_10%] 
+          bg-no-repeat 
+          rounded-b-[8px]"
+        style={{ backgroundImage: "url('/child-profile.png')" }}
+      />
 
-      <div className="w-[375px] h-[314px] rounded-lg bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: "url('/add-child.png')" }}
-      >
-        <div className="absolute top-4 left-4 bg-white p-2 rounded-full">
-          <img src="/plus-icon.png" alt="Add icon" className="w-6 h-6" />
+      <div className="flex flex-col items-center mt-14 px-8">
+        <div className="text-[#030303] text-3xl font-bold leading-10 text-center mb-6 font-poppins">
+          Create profile for your child
         </div>
+
+        <form className="flex flex-col gap-6 w-full max-w-md" onSubmit={handleSubmit}>
+          <div className="grid gap-4">
+            <div className="grid gap-2">
+              <Input
+                id="fullName"
+                type="text"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                placeholder="Child's name"
+                className="mt-2 w-full h-[46px] px-2 border-0 rounded-md shadow-sm bg-[#fdfdfd] text-[#94a3b8] text-sm font-medium"
+              />
+              <InputError message={errors.name} />
+            </div>
+
+            <div className="grid gap-2 relative">
+              <div className="relative flex items-center">
+                <Input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Password"
+                  className="w-full h-[46px] px-2 pr-10 border-0 rounded-md shadow-sm bg-[#fdfdfd] text-[#94a3b8] text-sm font-medium"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 text-[#4a4c7f]"
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
+              <InputError message={errors.password} />
+            </div>
+
+            <div className="grid gap-2 relative">
+              <div className="relative flex items-center">
+                <Input
+                  id="confirmPassword"
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Confirm password"
+                  className="w-full h-[46px] px-2 pr-10 border-0 rounded-md shadow-sm bg-[#fdfdfd] text-[#94a3b8] text-sm font-medium"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3 text-[#4a4c7f]"
+                  tabIndex={-1}
+                >
+                  {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
+              <InputError message={errors.password_confirmation} />
+            </div>
+
+            <Button
+              type="submit"
+              className="mt-6 w-full h-[44px] px-2 border-0 rounded-md shadow-md bg-[#809eff] text-black text-sm font-poppins font-bold"
+              disabled={isLoading}
+            >
+              {isLoading && <LoaderCircle className="h-4 w-4 animate-spin mr-2" />}
+              Create Profile
+            </Button>
+          </div>
+        </form>
       </div>
-
-      <div className="mt-6">
-        <h2 className="text-2xl font-semibold text-center text-gray-900">
-          Create Profile for Your Child
-        </h2>
-      </div>
-
-      <form onSubmit={handleSubmit} className="mt-6 w-full max-w-sm space-y-4">
-
-        {errors.name && (
-          <div className="text-red-500 text-sm text-center">{errors.name}</div>
-        )}
-
-        {errors.password && (
-          <div className="text-red-500 text-sm text-center">{errors.password}</div>
-        )}
-
-        {errors.password_confirmation && (
-          <div className="text-red-500 text-sm text-center">{errors.password_confirmation}</div>
-        )}
-
-        <div>
-          <label htmlFor="fullName" className="block text-lg text-gray-700 font-medium">
-            Full Name
-          </label>
-          <input
-            id="fullName"
-            name="name"
-            type="text"
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            placeholder="Enter full name"
-            className="w-full mt-2 p-3 border border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-yellow-400 placeholder-[#6B7280] text-[#6B7280]"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="password" className="block text-lg text-gray-700 font-medium">
-            Password
-          </label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter password"
-            className="w-full mt-2 p-3 border border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-yellow-400 placeholder-[#6B7280] text-[#6B7280]"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="confirmPassword" className="block text-lg text-gray-700 font-medium">
-            Confirm Password
-          </label>
-          <input
-            id="confirmPassword"
-            name="password_confirmation"
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            placeholder="Confirm your password"
-            className="w-full mt-2 p-3 border border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-yellow-400 placeholder-[#6B7280] text-[#6B7280]"
-          />
-        </div>
-
-        <Button
-          type="submit"
-          className="w-full py-3 text-lg bg-yellow-500 text-black font-semibold rounded-lg"
-        >
-          {isLoading ? "Creating..." : "Create Profile"}
-        </Button>
-      </form>
     </div>
   );
-};
-
-export default AddChild;
+}

@@ -4,12 +4,8 @@ import Screen from '@/components/welcomePage/Screen';
 const ChooseRole = () => {
   return (
     <Screen>
-      <div className="flex min-h-screen flex-col items-center justify-center p-6 text-[#EDEDEC] bg-[url('/bg1.png')] bg-cover bg-center">
-        <Head title="Choose Role">
-          <link rel="preconnect" href="https://fonts.bunny.net" />
-          <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
-        </Head>
-
+      <div className="flex min-h-screen flex-col items-center justify-center p-6 text-[#EDEDEC] bg-[url('/choose-role.png')] bg-cover bg-center">
+        <Head title="Choose Role" />
         <div className="mb-5 text-center">
           <h1 className="text-[28px] font-[500] leading-[28px] font-poppins">
             Are you a parent or a child?
