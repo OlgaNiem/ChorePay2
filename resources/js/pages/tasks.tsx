@@ -55,8 +55,6 @@ export default function AllTasks({ tasks }: Props) {
     <AppLayout>
       <Head title="Tasks" />
     <div className="p-4 space-y-6">
-      <h1 className="text-2xl font-semibold text-black">Tasks</h1>
-
       <div className="space-y-10">
         <TaskSection title="High Priority" tasks={highPriority} />
         <TaskSection title="Upcoming Tasks" tasks={upcoming} />

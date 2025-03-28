@@ -56,15 +56,19 @@ class TaskController extends Controller
 
     public function index(): Response
     {
+        $user = Auth::user();
+    
         $tasks = Task::with(['assignee' => function ($query) {
             $query->select('uuid', 'name');
         }])
+        ->where('created_by', $user->uuid)
         ->where('status', '!=', 'completed')
+        ->orderBy('due_date')
         ->paginate(10);
     
         return Inertia::render('tasks', [
             'tasks' => $tasks,
-        ]);       
+        ]);
     }
 
     public function markAsDone($id)
@@ -105,6 +109,24 @@ class TaskController extends Controller
             return response()->json(['message' => 'Something went wrong'], 500);
         }
     }
+
+    public function completed()
+    {
+        $user = Auth::user();
+
+        $tasks = Task::with(['assignee' => function ($query) {
+                $query->select('uuid', 'name');
+            }])
+            ->where('status', 'completed')
+            ->where('created_by', $user->uuid)
+            ->orderByDesc('due_date')
+            ->paginate(10);
+
+        return Inertia::render('completed-tasks', [
+            'tasks' => $tasks,
+        ]);
+    }
+
 
 
 }

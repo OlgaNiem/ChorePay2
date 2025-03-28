@@ -44,6 +44,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/new-task', [TaskController::class, 'create'])->name('new-task');
     Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
+    Route::get('/completed-tasks', [TaskController::class, 'completed'])->name('completed-tasks.index');
+
     Route::post('/tasks', [TaskController::class, 'store'])->name('store-task');
 
     Route::get('/child-profile/{child}', [ChildController::class, 'profile'])->name('child-profile');
