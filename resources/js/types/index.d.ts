@@ -115,6 +115,7 @@ export interface PageProps extends Record<string, unknown> {
         user: User | null;
     };
     children?: Child[];
+    child?: Child;
     tasks?: Task[] | PaginatedTasks;
     errors?: Record<string, string>;
 }

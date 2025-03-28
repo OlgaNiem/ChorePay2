@@ -63,7 +63,7 @@ export default function AllTasks({ tasks }: Props) {
         <TaskSection title="Overdue Tasks" tasks={overdue} />
       </div>
 
-      <div className="flex justify-center gap-4 pt-6">
+      <div className="flex justify-center  gap-4 pt-6">
         <button
           type="button"
           onClick={() => handlePageChange(tasks.prev_page_url)}

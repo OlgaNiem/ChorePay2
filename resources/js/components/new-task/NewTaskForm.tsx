@@ -28,7 +28,7 @@ const NewTaskForm = ({ children, errors }: Props) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-
+  
     router.post(
       route("store-task"),
       {
@@ -40,18 +40,10 @@ const NewTaskForm = ({ children, errors }: Props) => {
         due_date: date?.toLocaleDateString("en-CA"),
       },
       {
-        onSuccess: () => {
-          setLoading(false);
-        },
-
-        onError: () => {
-          setLoading(false);
-          console.error("Something went wrong.");
-        },
+        onFinish: () => setLoading(false),
       }
     );
   };
-
   return (
     <form onSubmit={handleSubmit}>
       <CardContent className="p-4 space-y-6">

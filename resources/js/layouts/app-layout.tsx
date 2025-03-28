@@ -11,6 +11,6 @@ export default ({ children, ...props }: AppLayoutProps) => (
         <AppLayoutTemplate {...props}>
             {children}
         </AppLayoutTemplate>
-        <Toaster richColors position="bottom-right" />
+        <Toaster richColors position="top-center" />
     </>
 );

@@ -1,15 +1,14 @@
-import { Head, useForm, usePage } from '@inertiajs/react';
+import { useForm, usePage } from '@inertiajs/react';
 import { LoaderCircle, Eye, EyeOff } from 'lucide-react';
-import { FormEventHandler, useEffect, useState } from 'react';
+import { FormEventHandler, useState } from 'react';
 import InputError from '@/components/input-error';
 import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import type { PageProps, RegisterForm } from '@/types';
 
 export default function Register() {
-    const { role, auth } = usePage<PageProps>().props;
+    const { role } = usePage<PageProps>().props;
 
     const { data, setData, post, processing, errors, reset } = useForm<RegisterForm>({
         name: '',
@@ -28,12 +27,6 @@ export default function Register() {
 
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
-    useEffect(() => {
-        if (auth?.user) {
-            window.location.href = route('dashboard');
-        }
-    }, [auth]);
 
     return (
         <div className="bg-[#f4edee] min-h-screen font-quicksand">
@@ -72,7 +65,7 @@ export default function Register() {
                                 onChange={(e) => setData('name', e.target.value)}
                                 disabled={processing}
                                 placeholder="Full name"
-                                className="mt-2 w-full h-[46px] px-2 border-0 rounded-md shadow-sm bg-[#fdfdfd] text-[#94a3b8] text-sm font-medium"
+                                className="mt-2 w-full h-[46px] px-2 border-0 rounded-md shadow-sm bg-white text-[#94a3b8] text-sm font-medium"
                             />
                             <InputError message={errors.name} className="mt-2" />
                         </div>
@@ -87,7 +80,7 @@ export default function Register() {
                                 onChange={(e) => setData('email', e.target.value)}
                                 disabled={processing}
                                 placeholder="email@example.com"
-                                className="mt-2 w-full h-[46px] px-2 border-0 rounded-md shadow-sm bg-[#fdfdfd] text-[#94a3b8] text-sm font-medium"
+                                className="mt-2 w-full h-[46px] px-2 border-0 rounded-md shadow-sm bg-white text-[#94a3b8] text-sm font-medium"
                             />
                             <InputError message={errors.email} />
                         </div>
@@ -103,7 +96,7 @@ export default function Register() {
                                 onChange={(e) => setData('password', e.target.value)}
                                 disabled={processing}
                                 placeholder="Password"
-                                className="w-full h-[46px] px-2 pr-10 border-0 rounded-md shadow-sm bg-[#fdfdfd] text-[#94a3b8] text-sm font-medium"
+                                className="w-full h-[46px] px-2 pr-10 border-0 rounded-md shadow-sm bg-white text-[#94a3b8] text-sm font-medium"
                                 />
                                 <button
                                 type="button"
@@ -129,7 +122,7 @@ export default function Register() {
                                     onChange={(e) => setData('password_confirmation', e.target.value)}
                                     disabled={processing}
                                     placeholder="Confirm password"
-                                    className="w-full h-[46px] px-2 pr-10 border-0 rounded-md shadow-sm bg-[#fdfdfd] text-[#94a3b8] text-sm font-medium"
+                                    className="w-full h-[46px] px-2 pr-10 border-0 rounded-md shadow-sm bg-white text-[#94a3b8] text-sm font-medium"
                                     />
                                     <button
                                     type="button"

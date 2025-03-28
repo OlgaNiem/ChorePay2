@@ -56,17 +56,18 @@ export function AppSidebar() {
         </SidebarMenu>
       </SidebarHeader>
 
-      <SidebarContent className="flex flex-col min-h-screen overflow-y-auto relative">
+      <SidebarContent className="flex flex-col h-full overflow-y-auto">
         <NavMain items={mainNavItems} />
 
         <div className="mt-auto">
-            {/* <NavFooter items={footerNavItems} /> */}
+          {/* <NavFooter items={footerNavItems} /> */}
 
-          <div className="px-2 pt-2 pb-4 mb-8 bg-white sticky bottom-0 z-10">
+          <div className="px-2 pt-2 pb-4 mb-5 bg-white">
             <NavUser />
           </div>
         </div>
       </SidebarContent>
+
     </Sidebar>
   );
 }

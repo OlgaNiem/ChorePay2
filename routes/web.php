@@ -53,6 +53,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware(['auth:children'])->group(function () {
     Route::get('/child-profile', [ChildController::class, 'profile'])->name('child-profile.child');
     Route::post('/logout-child', [ChildController::class, 'logout'])->name('logout-child');
+    Route::post('/tasks/{id}/complete', [TaskController::class, 'markAsDone'])->name('tasks.complete');
 });
 
 // guests

@@ -77,21 +77,31 @@ class ChildController extends Controller
             $child = Auth::guard('children')->user();
         } elseif (Auth::check()) {
             $parent = Auth::user();
-
+    
             $child = User::where('role', 'child')
                 ->where('parent_id', $parent->uuid)
                 ->when($childId, fn($query, $childId) => $query->where('uuid', $childId))
                 ->first();
-
+    
             if (!$child) {
-                return redirect()->route('dashboard')->withErrors(['error' => 'Child not found or unauthorized']);
+                return redirect()->route('dashboard')->withErrors([
+                    'error' => 'Child not found or unauthorized'
+                ]);
             }
         } else {
-            return redirect()->route('login')->withErrors(['error' => 'Unauthorized']);
+            return redirect()->route('login')->withErrors([
+                'error' => 'Unauthorized'
+            ]);
         }
-
-        return Inertia::render('child-profile', ['child' => $child]);
+        
+        $tasks = \App\Models\Task::where('assigned_to', $child->uuid)->get();
+    
+        return Inertia::render('child-profile', [
+            'child' => $child,
+            'tasks' => $tasks,
+        ]);
     }
+    
 
     public function logout()
     {

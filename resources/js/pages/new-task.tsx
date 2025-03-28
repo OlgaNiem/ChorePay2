@@ -8,7 +8,7 @@ const NewTask = () => {
   const { children = [], errors = {} } = usePage<PageProps>().props;
 
   return (
-    <Card className="min-h-screen w-full bg-gray-50 flex flex-col items-center justify-center p-6 rounded-none">
+    <Card className="min-h-screen w-full  flex flex-col items-center justify-center p-6 rounded-none">
       <Head title="Create New Task" />
 
       <div className="w-full max-w-md border-0 shadow-none rounded-none">

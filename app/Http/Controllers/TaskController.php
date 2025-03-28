@@ -45,8 +45,9 @@ class TaskController extends Controller
                 'assigned_to' => $validated['assigned_to'],
                 'created_by' => Auth::user()?->uuid,
             ]);
-
-            return Inertia::location(route('dashboard'));
+            
+            Log::info('Redirecting to dashboard from TaskController@store');
+            return redirect()->route('dashboard');
         } catch (\Exception $e) {
             Log::error('Task creation failed: ' . $e->getMessage());
             return back()->withErrors(['error' => 'Something went wrong. Please try again.']);
@@ -65,4 +66,45 @@ class TaskController extends Controller
             'tasks' => $tasks,
         ]);       
     }
+
+    public function markAsDone($id)
+    {
+        try {
+            $task = Task::findOrFail($id);
+            $user = Auth::guard('children')->user();
+
+            if (!$user || $task->assigned_to !== $user->uuid) {
+                Log::warning('Child tried to mark task not assigned to them', [
+                    'child_uuid' => $user?->uuid,
+                    'task_id' => $id,
+                ]);
+                return response()->json(['message' => 'Unauthorized'], 403);
+            }
+
+            if ($task->status !== 'pending') {
+                Log::info('Task is already completed or not pending', [
+                    'task_id' => $id,
+                    'current_status' => $task->status,
+                ]);
+                return response()->json(['message' => 'Task is not in pending status'], 400);
+            }
+
+            $task->status = 'completed';
+            $task->save();
+
+            Log::info('Task marked as completed by child', [
+                'task_id' => $id,
+                'child_uuid' => $user->uuid,
+            ]);
+
+            return redirect()->route('child-profile.child');
+        } catch (\Exception $e) {
+            Log::error('Error marking task as completed: ' . $e->getMessage(), [
+                'task_id' => $id,
+            ]);
+            return response()->json(['message' => 'Something went wrong'], 500);
+        }
+    }
+
+
 }
