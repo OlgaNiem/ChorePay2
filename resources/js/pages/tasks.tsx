@@ -17,12 +17,15 @@ export default function AllTasks({ tasks }: Props) {
     (t) => isToday(parseISO(t.due_date)) && t.status !== "completed"
   );
   
-  const highOnly = taskList.filter(
-    (t) =>
+  const highOnly = taskList.filter((t) => {
+    const dueDate = parseISO(t.due_date);
+    return (
       t.priority === "high" &&
-      !isToday(parseISO(t.due_date)) &&
+      !isToday(dueDate) &&
+      !isBefore(dueDate, today) &&
       t.status !== "completed"
-  );
+    );
+  });
   
   const highPriority = [...dueToday, ...highOnly];
   

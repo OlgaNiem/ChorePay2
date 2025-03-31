@@ -7,8 +7,10 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Inertia\Inertia;
 use Inertia\Response;
+use Carbon\Carbon;
 
 class TaskController extends Controller
 {
@@ -57,19 +59,50 @@ class TaskController extends Controller
     public function index(): Response
     {
         $user = Auth::user();
-    
-        $tasks = Task::with(['assignee' => function ($query) {
+        $today = now()->startOfDay();
+
+        $allTasks = Task::with(['assignee' => function ($query) {
             $query->select('uuid', 'name');
         }])
-        ->where('created_by', $user->uuid)
         ->where('status', '!=', 'completed')
+        ->where('created_by', $user->uuid)
         ->orderBy('due_date')
-        ->paginate(10);
+        ->get();
     
+
+        $high = $allTasks->filter(function ($task) use ($today) {
+            $due = Carbon::parse($task->due_date);
+            return $task->priority === 'high' && !$due->isBefore($today);
+        });
+
+        $upcoming = $allTasks->filter(function ($task) use ($today, $high) {
+            $due = Carbon::parse($task->due_date);
+            return !$high->contains($task) && !$due->isBefore($today);
+        });
+
+        $overdue = $allTasks->filter(function ($task) use ($today) {
+            return Carbon::parse($task->due_date)->isBefore($today);
+        });
+
+        $ordered = $high->concat($upcoming)->concat($overdue)->values();
+
+        $page = request()->get('page', 1);
+        $perPage = 10;
+        $items = $ordered->slice(($page - 1) * $perPage, $perPage)->values();
+
+        $paginated = new LengthAwarePaginator(
+            $items,
+            $ordered->count(),
+            $perPage,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
         return Inertia::render('tasks', [
-            'tasks' => $tasks,
+            'tasks' => $paginated,
         ]);
     }
+
 
     public function markAsDone($id)
     {
@@ -112,6 +145,10 @@ class TaskController extends Controller
 
     public function completed()
     {
+        if (Auth::guard('children')->check()) {
+            abort(403, 'Unauthorized');
+        }
+
         $user = Auth::user();
 
         $tasks = Task::with(['assignee' => function ($query) {
@@ -121,6 +158,8 @@ class TaskController extends Controller
             ->where('created_by', $user->uuid)
             ->orderByDesc('due_date')
             ->paginate(10);
+        
+        Log::info('Completed tasks page viewed by', ['parent_uuid' => $user->uuid]);
 
         return Inertia::render('completed-tasks', [
             'tasks' => $tasks,
