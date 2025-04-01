@@ -87,6 +87,13 @@ export interface Task {
     };
 }
 
+export interface ChildTaskListProps {
+    child: Child;
+    tasks: Task[];
+    user: User;
+    role: "parent" | "child";
+  }
+
 export interface PaginatedTasks {
     current_page: number;
     data: Task[];
@@ -107,10 +114,19 @@ export interface PaginatedTasks {
     total: number;
 }
 
+export interface TaskActionProps {
+    taskId: string;
+    disabled?: boolean;
+    className?: string;
+  }
 
+export interface TaskDetailsModalProps {
+    task: Task;
+  }
+    
 
 export interface PageProps extends Record<string, unknown> {
-    role?: string;
+    role?: "parent" | "child";
     auth: {
         user: User | null;
     };
@@ -119,3 +135,4 @@ export interface PageProps extends Record<string, unknown> {
     tasks?: Task[] | PaginatedTasks;
     errors?: Record<string, string>;
 }
+

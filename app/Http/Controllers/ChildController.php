@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -36,7 +37,7 @@ class ChildController extends Controller
                 'role' => 'child',
             ]);
 
-            return Inertia::location(route('dashboard'));
+            return redirect()->route('dashboard');
         } catch (\Exception $e) {
             Log::error('Error creating child profile: ' . $e->getMessage());
             return back()->withErrors(['error' => 'Something went wrong! Please try again later.']);
@@ -75,33 +76,39 @@ class ChildController extends Controller
     {
         if (Auth::guard('children')->check()) {
             $child = Auth::guard('children')->user();
+
+            return Inertia::render('child-profile', [
+                'child' => $child,
+                'tasks' => Task::where('assigned_to', $child->uuid)->get(),
+                'role' => 'child',
+            ]);
         } elseif (Auth::check()) {
             $parent = Auth::user();
-    
+
             $child = User::where('role', 'child')
                 ->where('parent_id', $parent->uuid)
                 ->when($childId, fn($query, $childId) => $query->where('uuid', $childId))
                 ->first();
-    
+
             if (!$child) {
                 return redirect()->route('dashboard')->withErrors([
                     'error' => 'Child not found or unauthorized'
                 ]);
             }
-        } else {
-            return redirect()->route('login')->withErrors([
-                'error' => 'Unauthorized'
+
+            return Inertia::render('child-profile', [
+                'child' => $child,
+                'tasks' => Task::where('assigned_to', $child->uuid)->get(),
+                'role' => 'parent',
             ]);
         }
-        
-        $tasks = \App\Models\Task::where('assigned_to', $child->uuid)->get();
-    
-        return Inertia::render('child-profile', [
-            'child' => $child,
-            'tasks' => $tasks,
+
+        return redirect()->route('login')->withErrors([
+            'error' => 'Unauthorized'
         ]);
     }
-    
+
+
 
     public function logout()
     {

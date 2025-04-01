@@ -47,6 +47,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/completed-tasks', [TaskController::class, 'completed'])->name('completed-tasks.index');
 
     Route::post('/tasks', [TaskController::class, 'store'])->name('store-task');
+    
+    Route::post('/tasks/{id}/complete', [TaskController::class, 'markAsDone'])->name('tasks.complete');
 
     Route::get('/child-profile/{child}', [ChildController::class, 'profile'])->name('child-profile');
 });
@@ -57,6 +59,7 @@ Route::middleware(['auth:children'])->group(function () {
     Route::post('/logout-child', [ChildController::class, 'logout'])->name('logout-child');
     Route::post('/tasks/{id}/complete', [TaskController::class, 'markAsDone'])->name('tasks.complete');
 });
+
 
 // guests
 Route::middleware('guest')->group(function () {

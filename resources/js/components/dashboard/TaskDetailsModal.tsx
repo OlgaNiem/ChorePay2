@@ -1,11 +1,11 @@
 import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import type { Task } from "@/types";
 
-interface Props {
-  task: Task;
-}
+import type { TaskDetailsModalProps } from "@/types";
+import ApproveTaskButton from "../task-actions/ApproveTaskButton";
+import PayRewardButton from "../task-actions/PayRewardButton";
 
-export default function TaskDetailsModal({ task }: Props) {
+
+export default function TaskDetailsModal({ task }: TaskDetailsModalProps) {
   return (
     <DialogContent>
       <DialogHeader>
@@ -37,6 +37,12 @@ export default function TaskDetailsModal({ task }: Props) {
           <span className="font-medium">Due Date:</span>
           <span>{task.due_date}</span>
         </div>
+
+        <div className="mt-6 flex justify-between">
+          <ApproveTaskButton taskId={task.id} className="w-[48%]" />
+          <PayRewardButton taskId={task.id} className="w-[48%]" />
+        </div>
+
       </div>
     </DialogContent>
   );

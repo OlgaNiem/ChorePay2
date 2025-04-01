@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { isToday, parseISO } from "date-fns";
-import { router } from "@inertiajs/react";
-import { toast } from "sonner"
+import { router, usePage } from "@inertiajs/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,7 +16,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import type { Task, Child } from "@/types";
+import type { Task, Child, PageProps } from "@/types";
 
 interface Props {
   child: Child;
@@ -26,6 +25,7 @@ interface Props {
 
 export default function ChildTaskList({ child, tasks }: Props) {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const { role } = usePage<PageProps>().props;
 
   const inProgressTasks = tasks.filter(
     (task) =>
@@ -87,12 +87,14 @@ export default function ChildTaskList({ child, tasks }: Props) {
               <p><strong>Status:</strong> {selectedTask.status}</p>
             </div>
 
-            <Button
-              className="bg-green-500 hover:bg-green-600 text-white mt-4"
-              onClick={() => handleMarkAsDone(selectedTask.id)}
-            >
-              Mark as Done
-            </Button>
+            {role === "child" && (
+              <Button
+                className="bg-green-500 hover:bg-green-600 text-white mt-4"
+                onClick={() => handleMarkAsDone(selectedTask.id)}
+              >
+                Mark as Done
+              </Button>
+            )}
           </DialogContent>
         </Dialog>
       )}
