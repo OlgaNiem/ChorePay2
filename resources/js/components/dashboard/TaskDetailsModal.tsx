@@ -1,12 +1,29 @@
 import type { Task } from "@/types";
+import ApproveTaskButton from "../task-actions/ApproveTaskButton";
+import PayRewardButton from "../task-actions/PayRewardButton";
 
 export default function TaskDetailsModal({
   task,
   onClose,
+  showApproveButton = false,
+  showPayRewardButton = false,
+  onPaid,
 }: {
   task: Task;
   onClose: () => void;
+  showApproveButton?: boolean;
+  showPayRewardButton?: boolean;
+  onPaid?: () => void;
 }) {
+  const handleApproved = () => {
+    onClose();
+  };
+
+  const handlePaid = () => {
+    onClose();
+    onPaid?.();
+  };
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center px-4"
@@ -27,8 +44,7 @@ export default function TaskDetailsModal({
 
         <h2 className="text-xl font-semibold text-gray-800">{task.title}</h2>
         <p className="text-sm text-gray-500">
-          Status:{" "}
-          <span className="font-medium text-gray-700">{task.status}</span>
+          Status: <span className="font-medium text-gray-700">{task.status}</span>
         </p>
 
         <div className="mt-4 grid gap-3 text-sm text-gray-700">
@@ -66,6 +82,26 @@ export default function TaskDetailsModal({
             <span>{task.paid_amount ? `€${task.paid_amount}` : "No"}</span>
           </div>
         </div>
+
+        {showApproveButton && !task.is_approved && (
+          <div className="pt-4">
+            <ApproveTaskButton
+              taskId={task.id}
+              className="w-full"
+              onSuccess={handleApproved}
+            />
+          </div>
+        )}
+
+        {showPayRewardButton && task.is_approved && !task.paid_amount && (
+          <div className="pt-4">
+            <PayRewardButton
+              taskId={task.id}
+              className="w-full"
+              onSuccess={handlePaid}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

@@ -3,9 +3,24 @@ import { router } from "@inertiajs/react";
 import { cn } from "@/lib/utils";
 import type { TaskActionProps } from "@/types";
 
-export default function ApproveTaskButton({ taskId, disabled, className }: TaskActionProps) {
+export default function ApproveTaskButton({
+  taskId,
+  disabled,
+  className,
+  onSuccess,
+}: TaskActionProps & { onSuccess?: () => void }) {
   const handleApprove = () => {
-    router.post(route("tasks.approve", taskId));
+    router.post(
+      route("tasks.approve", taskId),
+      {},
+      {
+        preserveState: true,
+        preserveScroll: true,
+        onSuccess: () => {
+          onSuccess?.();
+        },
+      }
+    );
   };
 
   return (

@@ -3,9 +3,20 @@ import { router } from "@inertiajs/react";
 import { cn } from "@/lib/utils";
 import type { TaskActionProps } from "@/types";
 
-export default function PayRewardButton({ taskId, disabled, className }: TaskActionProps) {
+export default function PayRewardButton({
+  taskId,
+  disabled,
+  className,
+  onSuccess, 
+}: TaskActionProps & { onSuccess?: () => void }) {
   const handlePay = () => {
-    router.post(route("tasks.pay", taskId));
+    router.post(route("tasks.pay", taskId), {}, {
+      preserveState: true,
+      preserveScroll: true,
+      onSuccess: () => {
+        onSuccess?.();
+      },
+    });
   };
 
   return (

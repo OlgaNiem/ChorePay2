@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { parseISO } from "date-fns";
+import { parseISO, compareDesc } from "date-fns";
 import {
   Card,
   CardContent,
@@ -7,16 +7,21 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import PayRewardButton from "../task-actions/PayRewardButton";
 import type { Task } from "@/types";
 import TaskDetailsModal from "./TaskDetailsModal";
 
 export default function TasksApprovedNotPaid({ tasks }: { tasks: Task[] }) {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
-  const filtered = tasks.filter(
-    (task) => task.status === "completed" && task.is_approved && !task.paid_amount
-  );
+  const filtered = tasks
+    .filter(
+      (task) => task.status === "completed" && task.is_approved && !task.paid_amount
+    )
+    .sort((a, b) => compareDesc(parseISO(a.due_date), parseISO(b.due_date)));
+
+  const handlePaid = () => {
+    setSelectedTask(null);
+  };
 
   return (
     <>
@@ -37,8 +42,14 @@ export default function TasksApprovedNotPaid({ tasks }: { tasks: Task[] }) {
                     <p className="font-medium">
                       {task.title} - €{task.reward}
                     </p>
+                    <p className="text-xs text-gray-500">
+                      Due: {task.due_date}
+                    </p>
                   </div>
-                  <PayRewardButton taskId={task.id} className="w-[40%]" />
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src={"/placeholder.svg"} alt="Child" />
+                    <AvatarFallback>C</AvatarFallback>
+                  </Avatar>
                 </CardContent>
               </Card>
             ))
@@ -51,7 +62,12 @@ export default function TasksApprovedNotPaid({ tasks }: { tasks: Task[] }) {
       </Card>
 
       {selectedTask && (
-        <TaskDetailsModal task={selectedTask} onClose={() => setSelectedTask(null)} />
+        <TaskDetailsModal
+          task={selectedTask}
+          onClose={() => setSelectedTask(null)}
+          showPayRewardButton
+          onPaid={handlePaid}
+        />
       )}
     </>
   );

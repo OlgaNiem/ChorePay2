@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { parseISO } from "date-fns";
+import { isToday, parseISO, compareDesc } from "date-fns";
 import {
   Card,
   CardContent,
@@ -7,22 +7,27 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import ApproveTaskButton from "../task-actions/ApproveTaskButton";
 import type { Task } from "@/types";
 import TaskDetailsModal from "./TaskDetailsModal";
 
 export default function TasksCompletedNotApproved({ tasks }: { tasks: Task[] }) {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
-  const filtered = tasks.filter(
-    (task) => task.status === "completed" && !task.is_approved && !task.paid_amount
-  );
+  const filtered = tasks
+    .filter(
+      (task) =>
+        task.status === "completed" &&
+        !task.is_approved &&
+        !task.paid_amount &&
+        !isToday(parseISO(task.due_date))
+    )
+    .sort((a, b) => compareDesc(parseISO(a.due_date), parseISO(b.due_date)));
 
   return (
     <>
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>Completed but Not Approved</CardTitle>
+          <CardTitle>Completed earlier but not approved</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           {filtered.length > 0 ? (
@@ -37,8 +42,14 @@ export default function TasksCompletedNotApproved({ tasks }: { tasks: Task[] }) 
                     <p className="font-medium">
                       {task.title} - €{task.reward}
                     </p>
+                    <p className="text-xs text-gray-500">
+                      Due: {task.due_date}
+                    </p>
                   </div>
-                  <ApproveTaskButton taskId={task.id} className="w-[40%]" />
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src={"/placeholder.svg"} alt="Child" />
+                    <AvatarFallback>C</AvatarFallback>
+                  </Avatar>
                 </CardContent>
               </Card>
             ))
@@ -51,7 +62,11 @@ export default function TasksCompletedNotApproved({ tasks }: { tasks: Task[] }) 
       </Card>
 
       {selectedTask && (
-        <TaskDetailsModal task={selectedTask} onClose={() => setSelectedTask(null)} />
+        <TaskDetailsModal
+          task={selectedTask}
+          onClose={() => setSelectedTask(null)}
+          showApproveButton
+        />
       )}
     </>
   );

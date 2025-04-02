@@ -13,15 +13,21 @@ import TaskDetailsModal from "./TaskDetailsModal";
 export default function CompletedTasks({ tasks }: { tasks: Task[] }) {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
-  const completedToday = tasks.filter(
-    (task) => task.status === "completed" && isToday(parseISO(task.due_date))
+  const completedToday = tasks
+  .filter(
+    (task) =>
+      task.status === "completed" &&
+      isToday(parseISO(task.due_date)) &&
+      !task.is_approved &&
+      !task.paid_amount
   );
+  
 
   return (
     <>
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>Completed Today</CardTitle>
+          <CardTitle>Completed today</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           {completedToday.length > 0 ? (
@@ -53,7 +59,11 @@ export default function CompletedTasks({ tasks }: { tasks: Task[] }) {
       </Card>
 
       {selectedTask && (
-        <TaskDetailsModal task={selectedTask} onClose={() => setSelectedTask(null)} />
+        <TaskDetailsModal
+          task={selectedTask}
+          onClose={() => setSelectedTask(null)}
+          showApproveButton
+        />
       )}
     </>
   );

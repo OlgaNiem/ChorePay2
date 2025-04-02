@@ -33,6 +33,7 @@ export default function Dashboard() {
           <CompletedTasks tasks={taskList} />
           <TasksCompletedNotApproved tasks={taskList} />
           <TasksApprovedNotPaid tasks={taskList} />
+          
           <ViewPaidTasksButton tasks={taskList} />
           
           <div className="flex justify-center">
