@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { isToday, parseISO } from "date-fns";
+import { parseISO } from "date-fns";
 import {
   Card,
   CardContent,
@@ -7,25 +7,26 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import PayRewardButton from "../task-actions/PayRewardButton";
 import type { Task } from "@/types";
 import TaskDetailsModal from "./TaskDetailsModal";
 
-export default function CompletedTasks({ tasks }: { tasks: Task[] }) {
+export default function TasksApprovedNotPaid({ tasks }: { tasks: Task[] }) {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
-  const completedToday = tasks.filter(
-    (task) => task.status === "completed" && isToday(parseISO(task.due_date))
+  const filtered = tasks.filter(
+    (task) => task.status === "completed" && task.is_approved && !task.paid_amount
   );
 
   return (
     <>
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>Completed Today</CardTitle>
+          <CardTitle>Approved but Not Paid</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
-          {completedToday.length > 0 ? (
-            completedToday.map((task) => (
+          {filtered.length > 0 ? (
+            filtered.map((task) => (
               <Card
                 key={task.id}
                 onClick={() => setSelectedTask(task)}
@@ -37,16 +38,13 @@ export default function CompletedTasks({ tasks }: { tasks: Task[] }) {
                       {task.title} - €{task.reward}
                     </p>
                   </div>
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage src={"/placeholder.svg"} alt="Child" />
-                    <AvatarFallback>C</AvatarFallback>
-                  </Avatar>
+                  <PayRewardButton taskId={task.id} className="w-[40%]" />
                 </CardContent>
               </Card>
             ))
           ) : (
             <p className="text-sm text-gray-500 text-center">
-              No tasks completed today.
+              No approved tasks pending payment.
             </p>
           )}
         </CardContent>

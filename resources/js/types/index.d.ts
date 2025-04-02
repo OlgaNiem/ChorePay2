@@ -70,8 +70,6 @@ export interface SharedData {
     [key: string]: unknown;
 }
 
-
-
 export interface Task {
     id: string;
     title: string;
@@ -85,7 +83,14 @@ export interface Task {
         name: string;
         avatar: string | null;
     };
+    is_approved: boolean;
+    paid_amount: string | null;
 }
+
+export interface TaskCardProps {
+    task: Task;
+    showActions?: boolean;
+  }
 
 export interface ChildTaskListProps {
     child: Child;
@@ -120,10 +125,14 @@ export interface TaskActionProps {
     className?: string;
   }
 
-export interface TaskDetailsModalProps {
+  export interface TaskDetailsModalProps {
     task: Task;
+    onClose?: () => void;
   }
-    
+
+  export interface CompletedTasksPageProps {
+    tasks: PaginatedTasks;
+  }
 
 export interface PageProps extends Record<string, unknown> {
     role?: "parent" | "child";
@@ -136,3 +145,10 @@ export interface PageProps extends Record<string, unknown> {
     errors?: Record<string, string>;
 }
 
+export type TaskSectionType = "pending" | "completed" | "approved" | "paid";
+
+export interface TaskSectionProps {
+  title: string;
+  tasks: Task[];
+  sectionType?: TaskSectionType;
+}

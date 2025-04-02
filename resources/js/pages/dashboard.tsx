@@ -4,6 +4,9 @@ import ChildrenList from '@/components/dashboard/ChildrenList';
 import TaskList from '@/components/dashboard/TaskList';
 import CompletedTasks from '@/components/dashboard/CompletedTasks';
 import type { PageProps } from '@/types';
+import TasksCompletedNotApproved from '@/components/dashboard/TasksCompletedNotApproved';
+import TasksApprovedNotPaid from '@/components/dashboard/TasksApprovedNotPaid';
+import ViewPaidTasksButton from '@/components/dashboard/ViewPaidTasksButton';
 
 export default function Dashboard() {
   const { children = [], tasks = [] } = usePage<PageProps>().props;
@@ -26,7 +29,12 @@ export default function Dashboard() {
                 View Active Tasks
               </button>
             </div>
+
           <CompletedTasks tasks={taskList} />
+          <TasksCompletedNotApproved tasks={taskList} />
+          <TasksApprovedNotPaid tasks={taskList} />
+          <ViewPaidTasksButton tasks={taskList} />
+          
           <div className="flex justify-center">
               <button
                 type='button'

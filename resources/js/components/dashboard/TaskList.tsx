@@ -66,7 +66,12 @@ export default function TaskList({ tasks }: { tasks: Task[] }) {
                 </Card>
               </DialogTrigger>
 
-              {selectedTask && <TaskDetailsModal task={selectedTask} />}
+              {selectedTask && (
+                <TaskDetailsModal
+                  task={selectedTask}
+                  onClose={() => setSelectedTask(null)}
+                />
+              )}
             </Dialog>
           ))
         ) : (

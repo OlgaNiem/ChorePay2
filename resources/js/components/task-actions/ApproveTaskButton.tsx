@@ -11,7 +11,7 @@ export default function ApproveTaskButton({ taskId, disabled, className }: TaskA
   return (
     <Button
       variant="outline"
-      className={cn("bg-[#7D9BF9] hover:bg-[#c2c4f4] text-black", className)}
+      className={cn("bg-[#7D9BF9] hover:bg-[#9c9fe5] text-black", className)}
       onClick={handleApprove}
       disabled={disabled}
     >

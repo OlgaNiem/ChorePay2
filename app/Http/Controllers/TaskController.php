@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use App\Models\User;
+
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Pagination\LengthAwarePaginator;
+
 use Inertia\Inertia;
 use Inertia\Response;
 use Carbon\Carbon;
@@ -47,7 +50,7 @@ class TaskController extends Controller
                 'assigned_to' => $validated['assigned_to'],
                 'created_by' => Auth::user()?->uuid,
             ]);
-            
+
             Log::info('Redirecting to dashboard from TaskController@store');
             return redirect()->route('dashboard');
         } catch (\Exception $e) {
@@ -64,11 +67,10 @@ class TaskController extends Controller
         $allTasks = Task::with(['assignee' => function ($query) {
             $query->select('uuid', 'name');
         }])
-        ->where('status', '!=', 'completed')
-        ->where('created_by', $user->uuid)
-        ->orderBy('due_date')
-        ->get();
-    
+            ->where('status', '!=', 'completed')
+            ->where('created_by', $user->uuid)
+            ->orderBy('due_date')
+            ->get();
 
         $high = $allTasks->filter(function ($task) use ($today) {
             $due = Carbon::parse($task->due_date);
@@ -152,13 +154,13 @@ class TaskController extends Controller
         $user = Auth::user();
 
         $tasks = Task::with(['assignee' => function ($query) {
-                $query->select('uuid', 'name');
-            }])
+            $query->select('uuid', 'name');
+        }])
             ->where('status', 'completed')
             ->where('created_by', $user->uuid)
             ->orderByDesc('due_date')
             ->paginate(10);
-        
+
         Log::info('Completed tasks page viewed by', ['parent_uuid' => $user->uuid]);
 
         return Inertia::render('completed-tasks', [
@@ -166,6 +168,35 @@ class TaskController extends Controller
         ]);
     }
 
+    public function approve(string $id): RedirectResponse
+    {
+        $task = Task::findOrFail($id);
 
+        if (Auth::guard('children')->check()) {
+            abort(403, 'Unauthorized');
+        }
 
+        if ($task->status === 'pending') {
+            $task->status = 'completed';
+        }
+
+        $task->is_approved = true;
+        $task->save();
+
+        return back()->with('success', 'Task approved');
+    }
+
+    public function pay(string $id): RedirectResponse
+    {
+        $task = Task::findOrFail($id);
+
+        if (!$task->is_approved) {
+            return back()->withErrors(['error' => 'Task must be approved before paying reward.']);
+        }
+
+        $task->paid_amount = $task->reward;
+        $task->save();
+
+        return back()->with('success', 'Reward paid');
+    }
 }

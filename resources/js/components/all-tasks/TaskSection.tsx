@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Task } from "@/types";
+import { TaskSectionProps} from "@/types";
 import TaskCard from "./TaskCard";
 
-export default function TaskSection({ title, tasks }: { title: string; tasks: Task[] }) {
+export default function TaskSection({ title, tasks, sectionType }: TaskSectionProps) {
   const [open, setOpen] = useState(true);
 
   if (tasks.length === 0) return null;
@@ -23,7 +23,11 @@ export default function TaskSection({ title, tasks }: { title: string; tasks: Ta
       {open && (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {tasks.map((task) => (
-            <TaskCard key={task.id} task={task} />
+            <TaskCard
+              key={task.id}
+              task={task}
+              showActions={sectionType === "completed"}
+            />
           ))}
         </div>
       )}

@@ -21,7 +21,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::inertia('family-options', 'family-options')->name('family-options');
-    
+
 
     Route::get('create-family', [FamilyController::class, 'create'])->name('create-family');
     Route::post('create-family', [FamilyController::class, 'store'])->name('store-family');
@@ -35,22 +35,25 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('return-family', function () {
         return Inertia::render('return-family');
     })->name('return-family');
+
     Route::post('return-family', [FamilyController::class, 'join'])->name('return-family.store');
 
     Route::get('/add-child', [ChildController::class, 'create'])->name('add-child');
     Route::post('/store-child-profile', [ChildController::class, 'store'])->name('store-child-profile');
 
-    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+    Route::get('/child-profile/{child}', [ChildController::class, 'profile'])->name('child-profile');
 
     Route::get('/new-task', [TaskController::class, 'create'])->name('new-task');
     Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
     Route::get('/completed-tasks', [TaskController::class, 'completed'])->name('completed-tasks.index');
 
     Route::post('/tasks', [TaskController::class, 'store'])->name('store-task');
-    
-    Route::post('/tasks/{id}/complete', [TaskController::class, 'markAsDone'])->name('tasks.complete');
 
-    Route::get('/child-profile/{child}', [ChildController::class, 'profile'])->name('child-profile');
+    Route::post('/tasks/{id}/complete', [TaskController::class, 'markAsDone'])->name('tasks.complete');
+    Route::post('/tasks/{id}/approve', [TaskController::class, 'approve'])->name('tasks.approve');
+    Route::post('/tasks/{id}/pay', [TaskController::class, 'pay'])->name('tasks.pay');
+
+    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
 
 // children
@@ -65,7 +68,7 @@ Route::middleware(['auth:children'])->group(function () {
 Route::middleware('guest')->group(function () {
     Route::get('register', [AuthenticatedSessionController::class, 'create'])->name('register');
     Route::post('register', [AuthenticatedSessionController::class, 'store']);
-    
+
     Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
 
@@ -73,5 +76,5 @@ Route::middleware('guest')->group(function () {
     Route::post('login-child', [ChildController::class, 'login']);
 });
 
-require __DIR__.'/settings.php';
-require __DIR__.'/auth.php';
+require __DIR__ . '/settings.php';
+require __DIR__ . '/auth.php';

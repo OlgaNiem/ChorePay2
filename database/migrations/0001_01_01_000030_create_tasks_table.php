@@ -16,6 +16,10 @@ return new class extends Migration
             $table->enum('priority', ['low', 'medium', 'high'])->default('high');
             $table->decimal('reward', 10, 2);
             $table->enum('status', ['pending', 'completed'])->default('pending');
+
+            $table->boolean('is_approved')->default(false);
+            $table->decimal('paid_amount', 10, 2)->nullable();
+
             $table->date('due_date')->nullable();
 
             $table->uuid('assigned_to')->nullable();

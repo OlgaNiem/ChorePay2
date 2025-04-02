@@ -1,9 +1,11 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Task } from "@/types";
+import { TaskCardProps } from "@/types";
 import { isToday, parseISO } from "date-fns";
 import InfoRow from "./InfoRow";
+import PayRewardButton from "../task-actions/PayRewardButton";
+import ApproveTaskButton from "../task-actions/ApproveTaskButton";
 
-export default function TaskCard({ task }: { task: Task }) {
+export default function TaskCard({ task, showActions = false }: TaskCardProps) {
   const isDueToday = isToday(parseISO(task.due_date));
 
   return (
@@ -38,6 +40,13 @@ export default function TaskCard({ task }: { task: Task }) {
               className="w-8 h-8 rounded-full"
             />
             <span className="text-sm text-gray-700">{task.assignee.name}</span>
+          </div>
+        )}
+        
+        {showActions && (
+          <div className="pt-4 flex justify-between">
+            <ApproveTaskButton taskId={task.id} className="w-[48%]" />
+            <PayRewardButton taskId={task.id} className="w-[48%]" />
           </div>
         )}
       </CardContent>
