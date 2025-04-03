@@ -65,7 +65,7 @@ export default function TasksApprovedNotPaid({ tasks }: { tasks: Task[] }) {
         <TaskDetailsModal
           task={selectedTask}
           onClose={() => setSelectedTask(null)}
-          showPayRewardButton
+          showPayRewardButton={true}
           onPaid={handlePaid}
         />
       )}

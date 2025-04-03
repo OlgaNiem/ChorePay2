@@ -7,6 +7,8 @@ import type { PageProps } from '@/types';
 import TasksCompletedNotApproved from '@/components/dashboard/TasksCompletedNotApproved';
 import TasksApprovedNotPaid from '@/components/dashboard/TasksApprovedNotPaid';
 import ViewPaidTasksButton from '@/components/dashboard/ViewPaidTasksButton';
+import ViewCompletedTasksButton from '@/components/dashboard/ViewCompletedTasksButton';
+import ViewActiveTasksButton from '@/components/dashboard/ViewActiveTasksButton';
 
 export default function Dashboard() {
   const { children = [], tasks = [] } = usePage<PageProps>().props;
@@ -18,33 +20,21 @@ export default function Dashboard() {
       <Head title="Dashboard" />
       <div className="min-h-screen bg-[#F4EDEC] overflow-auto">
         <div className="container mx-auto px-4 py-6 space-y-6">
+
           <ChildrenList children={children} />
           <TaskList tasks={taskList} />
-            <div className="flex justify-center">
-              <button
-                type='button'
-                onClick={() => router.visit(route("tasks.index"))}
-                className="w-full sm:w-auto px-4 py-2 rounded-md shadow-md bg-[#809eff] text-[#090a0e] text-sm font-medium font-poppins hover:bg-blue-600 transition"
-              >
-                View Active Tasks
-              </button>
-            </div>
 
+          <ViewActiveTasksButton />
+            
           <CompletedTasks tasks={taskList} />
           <TasksCompletedNotApproved tasks={taskList} />
+
+          <ViewCompletedTasksButton />
+
           <TasksApprovedNotPaid tasks={taskList} />
-          
           <ViewPaidTasksButton tasks={taskList} />
           
-          <div className="flex justify-center">
-              <button
-                type='button'
-                onClick={() => router.visit(route("completed-tasks.index"))}
-                className="w-full sm:w-auto px-4 py-2 rounded-md shadow-md bg-[#809eff] text-[#090a0e] text-sm font-medium font-poppins hover:bg-blue-600 transition"
-              >
-                View All Completed Tasks
-              </button>
-            </div>
+          
         </div>
       </div>
     </AppLayout>

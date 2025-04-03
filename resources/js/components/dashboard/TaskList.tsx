@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { isToday, parseISO } from "date-fns";
-import { Link } from "@inertiajs/react";
+import { isToday, parseISO, compareDesc } from "date-fns";
+import { Link, router } from "@inertiajs/react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -10,31 +10,27 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import type { Task } from "@/types";
 import TaskDetailsModal from "./TaskDetailsModal";
 
 export default function TaskList({ tasks }: { tasks: Task[] }) {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
-  const todayTasks = tasks.filter(
-    (task) =>
-      task.status === "pending" && isToday(parseISO(task.due_date))
-  );
+  const todayTasks = tasks
+    .filter((task) => isToday(parseISO(task.due_date)) && task.status === "pending")
+    .sort((a, b) => compareDesc(parseISO(a.due_date), parseISO(b.due_date)));
+
+  const handleApproved = () => {
+    setSelectedTask(null);
+  };
 
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Today's Tasks</CardTitle>
         <Link href={route("new-task")}>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="flex items-center gap-1 text-xs"
-          >
+          <Button variant="ghost" size="sm" className="flex items-center gap-1 text-xs">
             Add Task
             <div className="flex items-center justify-center h-6 w-6 rounded-full bg-blue-500 text-white">
               <Plus className="h-4 w-4" />
@@ -70,6 +66,8 @@ export default function TaskList({ tasks }: { tasks: Task[] }) {
                 <TaskDetailsModal
                   task={selectedTask}
                   onClose={() => setSelectedTask(null)}
+                  showApproveButton
+                  onApproved={handleApproved}
                 />
               )}
             </Dialog>

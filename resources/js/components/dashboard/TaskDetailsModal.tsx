@@ -1,34 +1,24 @@
-import type { Task } from "@/types";
 import ApproveTaskButton from "../task-actions/ApproveTaskButton";
 import PayRewardButton from "../task-actions/PayRewardButton";
+import type { Task } from "@/types";
 
 export default function TaskDetailsModal({
   task,
   onClose,
   showApproveButton = false,
   showPayRewardButton = false,
+  onApproved,
   onPaid,
 }: {
   task: Task;
   onClose: () => void;
   showApproveButton?: boolean;
   showPayRewardButton?: boolean;
+  onApproved?: () => void;
   onPaid?: () => void;
 }) {
-  const handleApproved = () => {
-    onClose();
-  };
-
-  const handlePaid = () => {
-    onClose();
-    onPaid?.();
-  };
-
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center px-4"
-      onClick={onClose}
-    >
+    <div className="fixed inset-0 z-50 flex items-center justify-center px-4" onClick={onClose}>
       <div
         className="w-full max-w-lg bg-white rounded-2xl shadow-xl p-6 space-y-4 relative"
         onClick={(e) => e.stopPropagation()}
@@ -43,24 +33,19 @@ export default function TaskDetailsModal({
         </button>
 
         <h2 className="text-xl font-semibold text-gray-800">{task.title}</h2>
-        <p className="text-sm text-gray-500">
-          Status: <span className="font-medium text-gray-700">{task.status}</span>
-        </p>
 
         <div className="mt-4 grid gap-3 text-sm text-gray-700">
+          <div className="flex justify-between">
+            <span className="font-medium">Status:</span>
+            <span className="capitalize">{task.status}</span>
+          </div>
+
           {task.description && (
             <div className="flex justify-between">
               <span className="font-medium">Description:</span>
-              <span className="text-right text-gray-600">
-                {task.description}
-              </span>
+              <span className="text-right text-gray-600">{task.description}</span>
             </div>
           )}
-
-          <div className="flex justify-between">
-            <span className="font-medium">Priority:</span>
-            <span className="capitalize">{task.priority}</span>
-          </div>
 
           <div className="flex justify-between">
             <span className="font-medium">Reward:</span>
@@ -85,21 +70,13 @@ export default function TaskDetailsModal({
 
         {showApproveButton && !task.is_approved && (
           <div className="pt-4">
-            <ApproveTaskButton
-              taskId={task.id}
-              className="w-full"
-              onSuccess={handleApproved}
-            />
+            <ApproveTaskButton taskId={task.id} className="w-full" onSuccess={onApproved} />
           </div>
         )}
 
-        {showPayRewardButton && task.is_approved && !task.paid_amount && (
+        {showPayRewardButton && !task.paid_amount && (
           <div className="pt-4">
-            <PayRewardButton
-              taskId={task.id}
-              className="w-full"
-              onSuccess={handlePaid}
-            />
+            <PayRewardButton taskId={task.id} className="w-full" onSuccess={onPaid} />
           </div>
         )}
       </div>
