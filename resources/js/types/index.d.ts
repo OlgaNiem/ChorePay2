@@ -162,4 +162,9 @@ export type ConfirmPaymentProps = {
     title?: string;
     description?: string;
   };
-  
+
+export interface BalanceProps {
+    income: string;
+    expense: string;
+    totalBalance: string;
+  }

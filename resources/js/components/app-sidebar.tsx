@@ -32,7 +32,7 @@ const mainNavItems: NavItem[] = [
   },
   {
     title: 'Balance',
-    url: '/dashboard',
+    url: '/balance',
     icon: Wallet,
   },
 ];

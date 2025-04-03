@@ -9,14 +9,18 @@ return new class extends Migration {
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->uuid('id')->primary();
+
             $table->uuid('user_id');
             $table->uuid('task_id');
+
             $table->decimal('amount', 10, 2);
+            $table->enum('type', ['income', 'expense']);
             $table->enum('status', ['pending', 'completed'])->default('pending');
+
             $table->timestamps();
 
             $table->foreign('user_id')->references('uuid')->on('users')->onDelete('cascade');
-            $table->foreign('task_id')->references('id')->on('tasks')->onDelete('cascade'); // 👈 вот здесь по ID!
+            $table->foreign('task_id')->references('id')->on('tasks')->onDelete('cascade');
         });
     }
 

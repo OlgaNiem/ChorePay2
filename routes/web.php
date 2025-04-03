@@ -7,6 +7,7 @@ use App\Http\Controllers\ChildController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\BalanceController;
 
 Route::get('/', function () {
     return Inertia::render('welcome');
@@ -52,6 +53,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/tasks/{id}/complete', [TaskController::class, 'markAsDone'])->name('tasks.complete');
     Route::post('/tasks/{id}/approve', [TaskController::class, 'approve'])->name('tasks.approve');
     Route::post('/tasks/{id}/pay', [TaskController::class, 'pay'])->name('tasks.pay');
+
+    Route::get('/balance', [\App\Http\Controllers\BalanceController::class, 'index'])->name('balance.index');
+
 
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
