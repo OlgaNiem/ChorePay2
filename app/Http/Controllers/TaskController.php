@@ -145,7 +145,7 @@ class TaskController extends Controller
         }
     }
 
-    public function completed()
+    public function completed(Request $request): Response
     {
         if (Auth::guard('children')->check()) {
             abort(403, 'Unauthorized');
@@ -153,11 +153,21 @@ class TaskController extends Controller
 
         $user = Auth::user();
 
-        $tasks = Task::with(['assignee' => function ($query) {
+        $query = Task::with(['assignee' => function ($query) {
             $query->select('uuid', 'name');
         }])
             ->where('status', 'completed')
-            ->where('created_by', $user->uuid)
+            ->where('created_by', $user->uuid);
+
+        if ($request->get('filter') === 'unpaid') {
+            $query->whereNull('paid_amount');
+        }
+
+        if ($request->filter === 'paid') {
+            $query->whereNotNull('paid_amount');
+        }
+
+        $tasks = $query
             ->orderByDesc('due_date')
             ->paginate(10);
 

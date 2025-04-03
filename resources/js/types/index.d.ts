@@ -78,6 +78,7 @@ export interface Task {
     reward: string;
     status: 'pending' | 'completed';
     due_date: string;
+    created_at: string;
     assigned_to: string;
     assignee?: {
         name: string;

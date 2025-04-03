@@ -30,6 +30,9 @@ export default function TaskCard({ task, showActions = false }: TaskCardProps) {
           <InfoRow label="Status" value={task.status} />
           <InfoRow label="Due" value={task.due_date} />
           <InfoRow label="Assigned to" value={task.assignee?.name ?? "Unknown"} />
+          <InfoRow label="Created at" value={task.created_at?.split("T")[0] ?? "-"} />
+          <InfoRow label="Approved" value={task.is_approved ? "Yes" : "No"} />
+          <InfoRow label="Paid" value={task.paid_amount ? `€${task.paid_amount}` : "No"} />
         </div>
 
         {task.assignee?.avatar && (
