@@ -13,16 +13,13 @@ import TaskDetailsModal from "./TaskDetailsModal";
 export default function TasksCompletedNotApproved({ tasks }: { tasks: Task[] }) {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
-  const filtered = tasks
-    .filter(
-      (task) =>
-        task.status === "completed" &&
-        !task.is_approved &&
-        !task.paid_amount &&
-        !isToday(parseISO(task.due_date))
-    )
-    .sort((a, b) => compareDesc(parseISO(a.due_date), parseISO(b.due_date)));
-
+  const filtered = tasks.filter(
+    (task) =>
+      task.status === "completed" &&
+      !task.is_approved &&
+      !task.paid_amount &&
+      !isToday(parseISO(task.due_date))
+  );
   return (
     <>
       <Card>

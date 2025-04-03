@@ -1,5 +1,5 @@
 import AppLayout from '@/layouts/app-layout';
-import { Head, usePage, router } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 import ChildrenList from '@/components/dashboard/ChildrenList';
 import TaskList from '@/components/dashboard/TaskList';
 import CompletedTasks from '@/components/dashboard/CompletedTasks';
@@ -9,11 +9,22 @@ import TasksApprovedNotPaid from '@/components/dashboard/TasksApprovedNotPaid';
 import ViewPaidTasksButton from '@/components/dashboard/ViewPaidTasksButton';
 import ViewCompletedTasksButton from '@/components/dashboard/ViewCompletedTasksButton';
 import ViewActiveTasksButton from '@/components/dashboard/ViewActiveTasksButton';
+import { compareDesc, parseISO } from 'date-fns';
 
 export default function Dashboard() {
   const { children = [], tasks = [] } = usePage<PageProps>().props;
 
-  const taskList = "data" in tasks ? tasks.data : tasks;
+  const taskListRaw = "data" in tasks ? tasks.data : tasks;
+
+  const taskList = [...taskListRaw]
+  .filter((task) => !!task.due_date)
+  .sort((a, b) => {
+    const dateCompare = compareDesc(parseISO(a.due_date), parseISO(b.due_date));
+    if (dateCompare !== 0) return dateCompare;
+
+    return compareDesc(parseISO(a.created_at), parseISO(b.created_at));
+  });
+
 
   return (
     <AppLayout>

@@ -16,9 +16,10 @@ export default function CompletedTasksPage({ tasks }: CompletedTasksPageProps) {
     .filter((t) => t.status === "completed" && t.is_approved && !t.paid_amount)
     .sort((a, b) => compareDesc(parseISO(a.due_date), parseISO(b.due_date)));
 
-  const paid = taskList
+    const paid = taskList
     .filter((t) => t.status === "completed" && t.paid_amount)
-    .sort((a, b) => compareDesc(parseISO(a.due_date), parseISO(b.due_date)));
+    .sort((a, b) => compareDesc(parseISO(a.updated_at), parseISO(b.updated_at)));
+  
 
   const handlePageChange = (url: string | null) => {
     if (url) {

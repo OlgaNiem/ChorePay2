@@ -79,6 +79,7 @@ export interface Task {
     status: 'pending' | 'completed';
     due_date: string;
     created_at: string;
+    updated_at: string;
     assigned_to: string;
     assignee?: {
         name: string;
@@ -153,3 +154,12 @@ export interface TaskSectionProps {
   tasks: Task[];
   sectionType?: TaskSectionType;
 }
+
+export type ConfirmPaymentProps = {
+    open: boolean;
+    onConfirm: () => void;
+    onCancel: () => void;
+    title?: string;
+    description?: string;
+  };
+  

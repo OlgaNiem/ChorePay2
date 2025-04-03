@@ -17,9 +17,9 @@ import TaskDetailsModal from "./TaskDetailsModal";
 export default function TaskList({ tasks }: { tasks: Task[] }) {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
-  const todayTasks = tasks
-    .filter((task) => isToday(parseISO(task.due_date)) && task.status === "pending")
-    .sort((a, b) => compareDesc(parseISO(a.due_date), parseISO(b.due_date)));
+  const todayTasks = tasks.filter(
+    (task) => isToday(parseISO(task.due_date)) && task.status === "pending"
+  );
 
   const handleApproved = () => {
     setSelectedTask(null);
