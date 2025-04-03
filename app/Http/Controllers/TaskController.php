@@ -70,6 +70,7 @@ class TaskController extends Controller
             ->where('status', '!=', 'completed')
             ->where('created_by', $user->uuid)
             ->orderBy('due_date')
+            ->orderByDesc('created_at')
             ->get();
 
         $high = $allTasks->filter(function ($task) use ($today) {
@@ -169,6 +170,7 @@ class TaskController extends Controller
 
         $tasks = $query
             ->orderByDesc('due_date')
+            ->orderByDesc('created_at')
             ->paginate(10);
 
         Log::info('Completed tasks page viewed by', ['parent_uuid' => $user->uuid]);
