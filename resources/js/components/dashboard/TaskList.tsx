@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { isToday, parseISO, compareDesc } from "date-fns";
-import { Link, router } from "@inertiajs/react";
+import { isToday, parseISO } from "date-fns";
+import { Link } from "@inertiajs/react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";

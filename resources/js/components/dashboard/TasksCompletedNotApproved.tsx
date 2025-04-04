@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { isToday, parseISO, compareDesc } from "date-fns";
+import { isToday, parseISO } from "date-fns";
 import {
   Card,
   CardContent,

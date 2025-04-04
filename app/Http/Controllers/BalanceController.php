@@ -14,12 +14,10 @@ class BalanceController extends Controller
     {
         $user = Auth::user();
 
-        // Входящие транзакции (то, что родитель пополнил себе на счёт)
         $income = Transaction::where('user_id', $user->id)
             ->where('type', 'income')
             ->sum('amount');
 
-        // Расходы родителя (выплаты за таски)
         $expense = Task::where('created_by', $user->uuid)
             ->where('status', 'completed')
             ->where('is_approved', true)
