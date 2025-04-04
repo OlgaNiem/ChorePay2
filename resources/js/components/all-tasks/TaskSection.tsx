@@ -26,7 +26,7 @@ export default function TaskSection({ title, tasks, sectionType }: TaskSectionPr
             <TaskCard
               key={task.id}
               task={task}
-              showActions={sectionType === "completed"}
+              showActions={sectionType === "completed" || sectionType === "overdue"}
             />
           ))}
         </div>

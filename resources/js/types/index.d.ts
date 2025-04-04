@@ -147,7 +147,7 @@ export interface PageProps extends Record<string, unknown> {
     errors?: Record<string, string>;
 }
 
-export type TaskSectionType = "pending" | "completed" | "approved" | "paid";
+export type TaskSectionType = "pending" | "completed" | "approved" | "paid" | "overdue";
 
 export interface TaskSectionProps {
   title: string;

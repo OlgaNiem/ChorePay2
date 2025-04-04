@@ -63,6 +63,7 @@ export default function CompletedTasks({ tasks }: { tasks: Task[] }) {
           task={selectedTask}
           onClose={() => setSelectedTask(null)}
           showApproveButton
+          onApproved={() => setSelectedTask(null)}
         />
       )}
     </>

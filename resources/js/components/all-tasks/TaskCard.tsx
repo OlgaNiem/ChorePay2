@@ -2,7 +2,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { TaskCardProps } from "@/types";
 import { isToday, parseISO } from "date-fns";
 import InfoRow from "./InfoRow";
-import PayRewardButton from "../task-actions/PayRewardButton";
 import ApproveTaskButton from "../task-actions/ApproveTaskButton";
 
 export default function TaskCard({ task, showActions = false }: TaskCardProps) {
@@ -47,11 +46,12 @@ export default function TaskCard({ task, showActions = false }: TaskCardProps) {
         )}
         
         {showActions && (
-          <div className="pt-4 flex justify-between">
-            <ApproveTaskButton taskId={task.id} className="w-[48%]" />
-            <PayRewardButton taskId={task.id} className="w-[48%]" />
-          </div>
-        )}
+  <div className="pt-4">
+    {!task.is_approved && (
+      <ApproveTaskButton taskId={task.id} className="w-full" />
+    )}
+  </div>
+)}
       </CardContent>
     </Card>
   );

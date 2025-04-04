@@ -61,7 +61,7 @@ export default function AllTasks({ tasks }: Props) {
         <div className="space-y-10">
           <TaskSection title="High Priority" tasks={highPriority} />
           <TaskSection title="Upcoming Tasks" tasks={upcoming} />
-          <TaskSection title="Overdue Tasks" tasks={overdue} />
+          <TaskSection title="Overdue Tasks" tasks={overdue} sectionType="overdue" />
         </div>
 
         <div className="flex justify-center gap-4 pt-6">
